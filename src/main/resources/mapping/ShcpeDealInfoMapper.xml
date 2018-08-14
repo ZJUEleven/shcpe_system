@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icbc.shcpe_system.dao.ShcpeDealInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MSG_ID" property="msgId" jdbcType="CHAR" />
+    <result column="TRD_DIR" property="trdDir" jdbcType="CHAR" />
+    <result column="MSY_TYPE" property="msyType" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="QUOTE_ID" property="quoteId" jdbcType="CHAR" />
+    <result column="MSG_STATUS" property="msgStatus" jdbcType="TINYINT" />
+    <result column="ERROR_REASON" property="errorReason" jdbcType="VARCHAR" />
+    <result column="TRD_STATUS" property="trdStatus" jdbcType="TINYINT" />
+    <result column="DEAL_ID" property="dealId" jdbcType="CHAR" />
+    <result column="XML_ID" property="xmlId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MSG_ID, TRD_DIR, MSY_TYPE, UPDATE_TIME, QUOTE_ID, MSG_STATUS, ERROR_REASON, TRD_STATUS, 
+    DEAL_ID, XML_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SHCPE_DEAL
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SHCPE_DEAL
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into SHCPE_DEAL (MSG_ID, TRD_DIR, MSY_TYPE, 
+      UPDATE_TIME, QUOTE_ID, MSG_STATUS, 
+      ERROR_REASON, TRD_STATUS, DEAL_ID, 
+      XML_ID)
+    values (#{msgId,jdbcType=CHAR}, #{trdDir,jdbcType=CHAR}, #{msyType,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{quoteId,jdbcType=CHAR}, #{msgStatus,jdbcType=TINYINT}, 
+      #{errorReason,jdbcType=VARCHAR}, #{trdStatus,jdbcType=TINYINT}, #{dealId,jdbcType=CHAR}, 
+      #{xmlId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into SHCPE_DEAL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="trdDir != null" >
+        TRD_DIR,
+      </if>
+      <if test="msyType != null" >
+        MSY_TYPE,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="quoteId != null" >
+        QUOTE_ID,
+      </if>
+      <if test="msgStatus != null" >
+        MSG_STATUS,
+      </if>
+      <if test="errorReason != null" >
+        ERROR_REASON,
+      </if>
+      <if test="trdStatus != null" >
+        TRD_STATUS,
+      </if>
+      <if test="dealId != null" >
+        DEAL_ID,
+      </if>
+      <if test="xmlId != null" >
+        XML_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        #{msgId,jdbcType=CHAR},
+      </if>
+      <if test="trdDir != null" >
+        #{trdDir,jdbcType=CHAR},
+      </if>
+      <if test="msyType != null" >
+        #{msyType,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quoteId != null" >
+        #{quoteId,jdbcType=CHAR},
+      </if>
+      <if test="msgStatus != null" >
+        #{msgStatus,jdbcType=TINYINT},
+      </if>
+      <if test="errorReason != null" >
+        #{errorReason,jdbcType=VARCHAR},
+      </if>
+      <if test="trdStatus != null" >
+        #{trdStatus,jdbcType=TINYINT},
+      </if>
+      <if test="dealId != null" >
+        #{dealId,jdbcType=CHAR},
+      </if>
+      <if test="xmlId != null" >
+        #{xmlId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+    update SHCPE_DEAL
+    <set >
+      <if test="msgId != null" >
+        MSG_ID = #{msgId,jdbcType=CHAR},
+      </if>
+      <if test="trdDir != null" >
+        TRD_DIR = #{trdDir,jdbcType=CHAR},
+      </if>
+      <if test="msyType != null" >
+        MSY_TYPE = #{msyType,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quoteId != null" >
+        QUOTE_ID = #{quoteId,jdbcType=CHAR},
+      </if>
+      <if test="msgStatus != null" >
+        MSG_STATUS = #{msgStatus,jdbcType=TINYINT},
+      </if>
+      <if test="errorReason != null" >
+        ERROR_REASON = #{errorReason,jdbcType=VARCHAR},
+      </if>
+      <if test="trdStatus != null" >
+        TRD_STATUS = #{trdStatus,jdbcType=TINYINT},
+      </if>
+      <if test="dealId != null" >
+        DEAL_ID = #{dealId,jdbcType=CHAR},
+      </if>
+      <if test="xmlId != null" >
+        XML_ID = #{xmlId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+    update SHCPE_DEAL
+    set MSG_ID = #{msgId,jdbcType=CHAR},
+      TRD_DIR = #{trdDir,jdbcType=CHAR},
+      MSY_TYPE = #{msyType,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      QUOTE_ID = #{quoteId,jdbcType=CHAR},
+      MSG_STATUS = #{msgStatus,jdbcType=TINYINT},
+      ERROR_REASON = #{errorReason,jdbcType=VARCHAR},
+      TRD_STATUS = #{trdStatus,jdbcType=TINYINT},
+      DEAL_ID = #{dealId,jdbcType=CHAR},
+      XML_ID = #{xmlId,jdbcType=BIGINT}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectNewestXmlByQuoteIdAndMsgType" parameterType="java.lang.String" resultType="java.lang.String">
+    select XML_INFO from SHCPE_XML_DETAIL
+    where XML_ID = (select distinct XML_ID from SHCPE_DEAL where QUOTE_ID = #{arg0} and MSY_TYPE = #{arg1} order by UPDATE_TIME desc limit 1)
+  </select>
+</mapper>
