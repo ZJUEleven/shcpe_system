@@ -13,6 +13,7 @@ import com.icbc.shcpe_system.util.SnowFlakeForDealAndQuoteID;
 import com.icbc.shcpe_system.util.SnowFlakeForMsgID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 import javax.xml.bind.*;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -276,6 +277,21 @@ public class DealMsg implements Runnable{
      * @return
      */
     private String createCes003(share.msg_class.CES011Msg.MainBody ces011, share.msg_class.CES003Msg.MainBody ces003) {
+        /*-----------设置报文中所有对象实例---------------------*/
+        ces003.setMsgId(new share.msg_class.CES003Msg.MsgId());
+        ces003.setBlist(new share.msg_class.CES003Msg.Blist());
+        ces003.setCpInf(new share.msg_class.CES003Msg.CpInf());
+        ces003.setDealInf(new share.msg_class.CES003Msg.DealInf());
+        ces003.setQuoteFctInf(new share.msg_class.CES003Msg.QuoteFctInf());
+        ces003.setQuoteInf(new share.msg_class.CES003Msg.QuoteInf());
+        ces003.setSlfInf(new share.msg_class.CES003Msg.SlfInf());
+        share.msg_class.CES003Msg.Bill ces003Bill = new share.msg_class.CES003Msg.Bill();
+        ces003.getQuoteFctInf().setSumAmt(new share.msg_class.CES003Msg.CurrencyAndAmount());
+        ces003.getQuoteFctInf().setSetAmt(new share.msg_class.CES003Msg.CurrencyAndAmount());
+        ces003.getQuoteFctInf().setPayInt(new share.msg_class.CES003Msg.CurrencyAndAmount());
+        ces003Bill.setCdAmt(new share.msg_class.CES003Msg.CurrencyAndAmount());
+        ces003Bill.setPayInt(new share.msg_class.CES003Msg.CurrencyAndAmount());
+        ces003Bill.setSetAmt(new share.msg_class.CES003Msg.CurrencyAndAmount());
         /*------------------------------设置报文标识（报文标识号+报文时间）---------------------------------*/
         String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
         ces003.getMsgId().setId(msgId);
@@ -353,7 +369,7 @@ public class DealMsg implements Runnable{
         ces003.getQuoteFctInf().setSetMode(share.msg_class.CES003Msg.SetMode.fromValue(ces001.getQuoteFctInf().getSetMode().value()));
         //结算金额
         ces003.getQuoteFctInf().getSetAmt().setValue(ces001.getQuoteFctInf().getSetAmt().getValue());
-        ces003.getQuoteFctInf().getSumAmt().setCcy(ces001.getQuoteFctInf().getSetAmt().getCcy());
+        ces003.getQuoteFctInf().getSetAmt().setCcy(ces001.getQuoteFctInf().getSetAmt().getCcy());
         //结算日
         ces003.getQuoteFctInf().setSetDate(ces001.getQuoteFctInf().getSetDate());
         //交易利率
@@ -364,6 +380,29 @@ public class DealMsg implements Runnable{
         //收益率
         ces003.getQuoteFctInf().setYieldRate(ces001.getQuoteFctInf().getYieldRate());
         /*-----------设置票据清单---------------*/
+        //票据
+        for (int i = 0; i < ces001.getBlist().getBill().size(); i++){
+            share.msg_class.CES001Msg.Bill ces001Bill = ces001.getBlist().getBill().get(i);
+            //票据号码
+            ces003Bill.setCdNo(ces001Bill.getCdNo());
+            //票据金额
+            ces003Bill.getCdAmt().setValue(ces001Bill.getCdAmt().getValue());
+            ces003Bill.getCdAmt().setCcy(ces001Bill.getCdAmt().getCcy());
+            //票据到期日
+            ces003Bill.setDueDt(ces001Bill.getDueDt());
+            //票据实际到期日
+            ces003Bill.setMatDt(ces001Bill.getMatDt());
+            //剩余期限
+            ces003Bill.setTenorDays(ces001Bill.getTenorDays());
+            //应付利息
+            ces003Bill.getPayInt().setCcy(ces001Bill.getPayInt().getCcy());
+            ces003Bill.getPayInt().setValue(ces001Bill.getPayInt().getValue());
+            //结算金额
+            ces003Bill.getSetAmt().setValue(ces001Bill.getSetAmt().getValue());
+            ces003Bill.getSetAmt().setCcy(ces001Bill.getSetAmt().getCcy());
+            //每一张票据放入Blist
+            ces003.getBlist().getBill().add(ces003Bill);
+        }
         return getXmlStrFromJava(ces003);
     }
 
@@ -407,6 +446,7 @@ public class DealMsg implements Runnable{
     private String createCes012(share.msg_class.CES011Msg.MainBody ces011, share.msg_class.CES012Msg.MainBody ces012) {
         //设置报文标识（报文标识号+报文时间）
         String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
+        ces012.setMsgId(new share.msg_class.CES012Msg.MsgId());
         ces012.getMsgId().setId(msgId);
         //生成XMLGregorianCalendar类
         GregorianCalendar gcal =new GregorianCalendar();
@@ -418,11 +458,13 @@ public class DealMsg implements Runnable{
         }
         ces012.getMsgId().setCreDtTm(xgcal);//报文时间
         //设置报价单信息（报价单编号+业务类型）
+        ces012.setQuoteInf(new share.msg_class.CES012Msg.QuoteInf());
         ces012.getQuoteInf().setQuoteId(ces011.getQuoteInf().getQuoteId());//报价单编号
         share.msg_class.CES012Msg.BusiType ces012BusiType = share.msg_class.CES012Msg.BusiType.fromValue(ces011.getQuoteInf().getBusiType().value());
         ces012.getQuoteInf().setBusiType(ces012BusiType);//设置业务类型
 
         //设置终止原因
+        ces012.setRefInf(new share.msg_class.CES012Msg.RefInf());
         ces012.getRefInf().setRefCmd("对方终止交易！");
 
         return getXmlStrFromJava(ces012);
