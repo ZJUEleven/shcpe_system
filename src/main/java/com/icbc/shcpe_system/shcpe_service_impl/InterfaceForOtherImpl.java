@@ -28,6 +28,8 @@ import java.util.concurrent.Executors;
 public class InterfaceForOtherImpl implements InterfaceForOther {
     @Autowired
     MsgHandleResult msgHandleResult;
+    @Autowired
+    DealMsg dealMsg;
     public MsgHandleResult tradeInfoReceive(String msgType, String msg){
         switch (msgType){
             case MsgType.CES001:
@@ -58,7 +60,6 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
         if(isXML){
             msgHandleResult.setResultCode("1");
             //报文格式没错就开新线程处理业务
-            DealMsg dealMsg = new DealMsg();
             dealMsg.setMsg(msg);
             dealMsg.setMsgType(msgType);
             ExecutorService executorService = Executors.newCachedThreadPool();
