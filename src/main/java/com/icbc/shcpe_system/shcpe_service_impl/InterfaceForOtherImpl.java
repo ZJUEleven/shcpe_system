@@ -1,5 +1,6 @@
 package com.icbc.shcpe_system.shcpe_service_impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.icbc.shcpe_system.util.MsgType;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -17,6 +18,12 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Service(
+        version = "${demo.service.version}",
+        application = "${dubbo.application.id}",
+        protocol = "${dubbo.protocal.id}",
+        registry = "${dubbo.registry.id}"
+)
 public class InterfaceForOtherImpl implements InterfaceForOther {
     @Autowired
     MsgHandleResult msgHandleResult;

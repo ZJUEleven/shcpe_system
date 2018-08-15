@@ -47,7 +47,7 @@ public class DealMsg implements Runnable{
     //Dubbo调用接口配置，作为consumer
     @Reference(version = "${demo.shcpe_service.version}",
             application = "${dubbo.application.id}",
-            url = "dubbo://localhost:12345")
+            url = "dubbo://localhost:23456")
     private MsgHandlerForShcpe msgHandlerForShcpe;
 
     @Autowired
