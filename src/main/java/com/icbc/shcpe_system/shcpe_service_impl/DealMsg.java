@@ -214,8 +214,9 @@ public class DealMsg implements Runnable{
      * @return
      */
     private String createCes002(share.msg_class.CES001Msg.MainBody ces001, share.msg_class.CES002Msg.MainBody ces002) {
-        //设置报文标识（报文标识号+报文时间）
+        /*------设置报文标识（报文标识号+报文时间）--------*/
         String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
+        ces002.setMsgId(new share.msg_class.CES002Msg.MsgId());
         ces002.getMsgId().setId(msgId);
         //生成XMLGregorianCalendar类
         GregorianCalendar gcal =new GregorianCalendar();
@@ -226,13 +227,19 @@ public class DealMsg implements Runnable{
             e.printStackTrace();
         }
         ces002.getMsgId().setCreDtTm(xgcal);//报文时间
-        //设置原报文标识
+        /*------------设置原报文标识------------*/
+        ces002.setOrgnlMsgId(new share.msg_class.CES002Msg.OrgnlMsgId());
         ces002.getOrgnlMsgId().setId(ces001.getMsgId().getId());
         ces002.getOrgnlMsgId().setCreDtTm(ces001.getMsgId().getCreDtTm());
-        //设置报价单信息(报价单编号+业务类型)
+        /*----------设置报价单信息---------*/
+        ces002.setQuoteInf(new share.msg_class.CES002Msg.QuoteInf());
+        //报价单编号
         ces002.getQuoteInf().setQuoteId(ces001.getQuoteInf().getQuoteId());
+        //报价单操作标识
+        //业务类型
         share.msg_class.CES002Msg.BusiType ces002BusiType = share.msg_class.CES002Msg.BusiType.fromValue(ces001.getQuoteInf().getBusiType().value());
         ces002.getQuoteInf().setBusiType(ces002BusiType);
+        //交易方向
 
         return getXmlStrFromJava(ces002);
     }
@@ -540,6 +547,7 @@ public class DealMsg implements Runnable{
     private String createCes010(share.msg_class.CES001Msg.MainBody ces001, share.msg_class.CES010Msg.MainBody ces010) {
        //设置报文标识（报文标识号+报文时间）
         String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
+        ces010.setMsgId(new share.msg_class.CES010Msg.MsgId());
         ces010.getMsgId().setId(msgId);
         //生成XMLGregorianCalendar类
         GregorianCalendar gcal =new GregorianCalendar();
@@ -551,11 +559,15 @@ public class DealMsg implements Runnable{
         }
         ces010.getMsgId().setCreDtTm(xgcal);//报文时间
         //设置原报文标识
+        ces010.setOrgnlMsgId(new share.msg_class.CES010Msg.OrgnlMsgId());
         ces010.getOrgnlMsgId().setId(ces001.getMsgId().getId());
         ces010.getOrgnlMsgId().setCreDtTm(ces001.getMsgId().getCreDtTm());
         //设置处理结果信息
-        //还没添加
+        ces010.setBizCtrlInf(new share.msg_class.CES010Msg.BizCtrlInf());
+        ces010.getBizCtrlInf().setPrcCd("aaaaaaaaa");//随意设定一个处理结果码
+        ces010.getBizCtrlInf().setPrcMsg("处理结果说明");
         //设置业务单信息(业务单编号+业务类型)
+        ces010.setQuoteInf(new share.msg_class.CES010Msg.QuoteInf());
         ces010.getQuoteInf().setQuoteId(ces001.getQuoteInf().getQuoteId());
         share.msg_class.CES010Msg.BusiType ces010BusiType = share.msg_class.CES010Msg.BusiType.fromValue(ces001.getQuoteInf().getBusiType().value());
         ces010.getQuoteInf().setBusiType(ces010BusiType);
