@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 @Service(
         version = "${demo.service.version}",
         application = "${dubbo.application.id}",
-        protocol = "${dubbo.protocal.id}",
+        protocol = "${dubbo.protocol.id}",
         registry = "${dubbo.registry.id}"
 )
 public class InterfaceForOtherImpl implements InterfaceForOther {
