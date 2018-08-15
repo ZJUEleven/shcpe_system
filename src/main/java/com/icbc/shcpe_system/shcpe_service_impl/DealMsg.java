@@ -13,7 +13,6 @@ import com.icbc.shcpe_system.util.SnowFlakeForDealAndQuoteID;
 import com.icbc.shcpe_system.util.SnowFlakeForMsgID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 import javax.xml.bind.*;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -236,10 +235,116 @@ public class DealMsg implements Runnable{
         //报价单编号
         ces002.getQuoteInf().setQuoteId(ces001.getQuoteInf().getQuoteId());
         //报价单操作标识
+        ces002.getQuoteInf().setQuoteOp("0");//0：发送；1：修改发送
         //业务类型
         share.msg_class.CES002Msg.BusiType ces002BusiType = share.msg_class.CES002Msg.BusiType.fromValue(ces001.getQuoteInf().getBusiType().value());
         ces002.getQuoteInf().setBusiType(ces002BusiType);
         //交易方向
+        ces002.getQuoteInf().setTrdDir(share.msg_class.CES002Msg.TrdDir.fromValue(ces001.getQuoteInf().getTrdDir().value()));
+        /*------设置本方信息-------*/
+        ces002.setSlfInf(new share.msg_class.CES002Msg.SlfInf());
+        //本方机构代码
+        ces002.getSlfInf().setReqBranch(ces001.getSlfInf().getReqBranch());
+        //本方非法人产品
+        ces002.getSlfInf().setProductId(ces001.getSlfInf().getProductId());
+        //本方交易员ID
+        ces002.getSlfInf().setReqUser(ces001.getSlfInf().getReqUser());
+        /*------设置对方信息-------*/
+        ces002.setCpInf(new share.msg_class.CES002Msg.CpInf());
+        //对方机构代码
+        ces002.getCpInf().setCpBranch(ces001.getCpInf().getCpBranch());
+        //对方非法人产品
+        ces002.getCpInf().setCpProductId(ces001.getCpInf().getCpProductId());
+        //对方交易员ID
+        ces002.getCpInf().setCpUser(ces001.getCpInf().getCpUser());
+        /*------设置报价信息-------*/
+        ces002.setQuoteFctInf(new share.msg_class.CES002Msg.QuoteFctInf());
+        //票据种类
+        ces002.getQuoteFctInf().setCdType(share.msg_class.CES002Msg.CdType.fromValue(ces001.getQuoteFctInf().getCdType().value()));
+        //票据介质
+        ces002.getQuoteFctInf().setCdMedia(share.msg_class.CES002Msg.CdMedia.fromValue(ces001.getQuoteFctInf().getCdMedia().value()));
+        //票据张数
+        ces002.getQuoteFctInf().setDrftNm(ces001.getQuoteFctInf().getDrftNm());
+        //票面总额
+        ces002.getQuoteFctInf().setSumAmt(new share.msg_class.CES002Msg.CurrencyAndAmount());
+        ces002.getQuoteFctInf().getSumAmt().setCcy(ces001.getQuoteFctInf().getSumAmt().getCcy());
+        ces002.getQuoteFctInf().getSumAmt().setValue(ces001.getQuoteFctInf().getSumAmt().getValue());
+        //加权平均剩余期限
+        ces002.getQuoteFctInf().setTenorDays(ces001.getQuoteFctInf().getTenorDays());
+        //部分成交选项
+        ces002.getQuoteFctInf().setSubDeal(ces001.getQuoteFctInf().getSubDeal());
+        //报价有效时间
+        ces002.getQuoteFctInf().setQuoteTime(ces001.getQuoteFctInf().getQuoteTime());
+        //清算速度
+        ces002.getQuoteFctInf().setSetSpeed(share.msg_class.CES002Msg.SetSpeed.fromValue(ces001.getQuoteFctInf().getSetSpeed().value()));
+        //清算类型
+        ces002.getQuoteFctInf().setClrTp(share.msg_class.CES002Msg.ClrTp.fromValue(ces001.getQuoteFctInf().getClrTp().value()));
+        //最晚结算时间
+        ces002.getQuoteFctInf().setSetTime(ces001.getQuoteFctInf().getSetTime());
+        //结算方式
+        ces002.getQuoteFctInf().setSetMode(share.msg_class.CES002Msg.SetMode.fromValue(ces001.getQuoteFctInf().getSetMode().value()));
+        //结算金额
+        ces002.getQuoteFctInf().setSetAmt(new share.msg_class.CES002Msg.CurrencyAndAmount());
+        ces002.getQuoteFctInf().getSetAmt().setCcy(ces001.getQuoteFctInf().getSetAmt().getCcy());
+        ces002.getQuoteFctInf().getSetAmt().setValue(ces001.getQuoteFctInf().getSetAmt().getValue());
+        //结算日
+        ces002.getQuoteFctInf().setSetDate(ces001.getQuoteFctInf().getSetDate());
+        //交易利率
+        ces002.getQuoteFctInf().setTrdRate(ces001.getQuoteFctInf().getTrdRate());
+        //应付利息
+        ces002.getQuoteFctInf().setPayInt(new share.msg_class.CES002Msg.CurrencyAndAmount());
+        ces002.getQuoteFctInf().getPayInt().setCcy(ces001.getQuoteFctInf().getPayInt().getCcy());
+        ces002.getQuoteFctInf().getPayInt().setValue(ces001.getQuoteFctInf().getPayInt().getValue());
+        //收益率
+        ces002.getQuoteFctInf().setYieldRate(ces001.getQuoteFctInf().getYieldRate());
+        /*------设置票据清单信息-------*/
+        ces002.setBlist(new share.msg_class.CES002Msg.Blist());
+        //票据
+        share.msg_class.CES002Msg.Bill ces002Bill = new share.msg_class.CES002Msg.Bill();
+        for(int i = 0 ; i < ces001.getBlist().getBill().size() ; i++){
+            share.msg_class.CES001Msg.Bill ces001Bill = ces001.getBlist().getBill().get(i);
+            //票据号码
+            ces002Bill.setCdNo(ces001Bill.getCdNo());
+            //票据金额
+            ces002Bill.setCdAmt(new share.msg_class.CES002Msg.CurrencyAndAmount());
+            ces002Bill.getCdAmt().setCcy(ces001Bill.getCdAmt().getCcy());
+            ces002Bill.getCdAmt().setValue(ces001Bill.getCdAmt().getValue());
+            //票据到期日
+            ces002Bill.setDueDt(ces001Bill.getDueDt());
+            //票据实际到期日
+            ces002Bill.setMatDt(ces001Bill.getMatDt());
+            //贴现日期
+            ces002Bill.setDsctDt(xgcal);
+            //出票日期
+            ces002Bill.setIssDt(xgcal);
+            //出票人名称
+            ces002Bill.setDwrName("张三");
+            //承兑人名称
+            ces002Bill.setPayName("李四");
+            //承兑人开户行机构代码
+            ces002Bill.setAcptSvcrBrId(BRANCHID);
+            //贴现行机构代码
+            ces002Bill.setDsctBrId(BRANCHID);
+            //保证增信行机构代码
+            ces002Bill.setAddGrntBrId(BRANCHID);
+            //承兑人开户行（确认）机构代码
+            ces002Bill.setAcptCfmBrId(BRANCHID);
+            //承兑保证行机构代码
+            ces002Bill.setAcptGrntBrId(BRANCHID);
+            //贴现保证人机构代码
+            ces002Bill.setDsctGrntBrId(BRANCHID);
+            //剩余期限
+            ces002Bill.setTenorDays(ces001Bill.getTenorDays());
+            //应付利息
+            ces002Bill.setPayInt(new share.msg_class.CES002Msg.CurrencyAndAmount());
+            ces002Bill.getPayInt().setCcy(ces001Bill.getPayInt().getCcy());
+            ces002Bill.getPayInt().setValue(ces001Bill.getPayInt().getValue());
+            //结算金额
+            ces002Bill.setSetAmt(new share.msg_class.CES002Msg.CurrencyAndAmount());
+            ces002Bill.getSetAmt().setCcy(ces001Bill.getSetAmt().getCcy());
+            ces002Bill.getSetAmt().setValue(ces001Bill.getSetAmt().getValue());
+            ces002.getBlist().getBill().add(ces002Bill);
+        }
 
         return getXmlStrFromJava(ces002);
     }
