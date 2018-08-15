@@ -32,11 +32,13 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
             case MsgType.CES001:
                 //校验报文格式
                 Boolean isCes001XML = validateXMLByXSD(msgType,msg);
-                if (!isContinueDeal(msgType, msg, isCes001XML)) return msgHandleResult;
+                isContinueDeal(msgType, msg, isCes001XML);
+                return msgHandleResult;
             case MsgType.CES011:
                 //校验报文格式
                 Boolean isCes011XML = validateXMLByXSD(msgType,msg);
-                if (!isContinueDeal(msgType, msg, isCes011XML)) return msgHandleResult;
+                isContinueDeal(msgType, msg, isCes011XML);
+                return msgHandleResult;
             default:
                 msgHandleResult.setResultCode("-1");
                 msgHandleResult.setErrorReason("报文类型错误！");
