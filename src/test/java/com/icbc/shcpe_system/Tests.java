@@ -11,6 +11,8 @@ import com.icbc.shcpe_system.dao.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import share.middle_service.MsgHandlerForShcpe;
+import share.shcpe_service.InterfaceForOther;
+import share.util.MsgHandleResult;
 
 import java.util.Date;
 
@@ -24,6 +26,10 @@ public class Tests {
     private ShcpeDealInfoMapper shcpeDealInfoMapper;
     @Autowired
     private DealMsg MyTradeInfoReceive;
+    @Autowired
+    private InterfaceForOther interfaceForOther;
+    @Autowired
+    private MsgHandleResult msgHandleResult;
 
     @Reference(version = "${demo.shcpe_service.version}",
             application = "${dubbo.application.id}",
@@ -48,7 +54,9 @@ public class Tests {
         shcpeDealInfo.setTrdStatus(Byte.parseByte("1"));
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setXmlId(6l);*/
-        String xml = shcpeDealInfoMapper.selectNewestXmlByQuoteIdAndMsgType("12","CES.001.001");
-        System.out.println(xml);
+/*        String xml = shcpeDealInfoMapper.selectNewestXmlByQuoteIdAndMsgType("12","CES.001.001");
+        System.out.println(xml);*/
+/*        msgHandleResult = interfaceForOther.tradeInfoReceive("CES.001.001","this is 001 message!");
+        System.out.println(msgHandleResult.getResultCode());*/
     }
 }

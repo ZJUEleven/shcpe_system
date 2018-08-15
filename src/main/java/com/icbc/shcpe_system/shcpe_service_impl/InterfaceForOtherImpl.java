@@ -18,6 +18,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+//Dubbo调用接口配置，作为Provider
 @Service(
         version = "${demo.service.version}",
         application = "${dubbo.application.id}",

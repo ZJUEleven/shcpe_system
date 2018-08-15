@@ -44,7 +44,7 @@ public class DealMsg implements Runnable{
         this.msg = msg;
     }
 
-    //Dubbo调用接口配置，作为consumer
+    //Dubbo调用接口配置，作为Consumer
     @Reference(version = "${demo.shcpe_service.version}",
             application = "${dubbo.application.id}",
             url = "dubbo://localhost:23456")
@@ -761,7 +761,7 @@ public class DealMsg implements Runnable{
             // 进行将Xml转成对象的核心接口
             Unmarshaller unmarshaller = context.createUnmarshaller();
             StringReader sr = new StringReader(msg);
-            xmlObject = unmarshaller.unmarshal(sr);
+            xmlObject = ((JAXBElement)unmarshaller.unmarshal(sr)).getValue();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
