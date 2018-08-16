@@ -1,6 +1,7 @@
 package com.icbc.shcpe_system.shcpe_service_impl;
 
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.springframework.context.annotation.Scope;
 import share.middle_service.MsgHandlerForShcpe;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.icbc.shcpe_system.dao.ShcpeDealInfoMapper;
@@ -27,6 +28,7 @@ import java.util.GregorianCalendar;
 
 
 @Service
+@Scope("prototype")
 public class DealMsg implements Runnable{
     private static final String MEMBERID = "000000";//会员代码（6位）
     private static final String BRANCHID = "000000000";//机构代码（9位）
@@ -84,14 +86,8 @@ public class DealMsg implements Runnable{
                     msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES010,ces010XmlStr);
                 }catch(Exception e){
                     //若出现异常，将报文状态置为“发送失败”
-                    ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
-                    shcpeDealInfo.setId(ces010IdInMysql);
-                    shcpeDealInfo.setMsgStatus((byte)-1);//报文状态置为“发送失败”
-                    try {
-                        shcpeDealInfoMapper.updateByPrimaryKeySelective(shcpeDealInfo);
-                    }catch (PersistenceException pe){
-                        e.printStackTrace();
-                    }
+                    updateMsgStatus(ces010IdInMysql);
+                    e.printStackTrace();
                 }
 
                 //组装“转贴现对话报价转发报文”ces002
@@ -104,14 +100,8 @@ public class DealMsg implements Runnable{
                     msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES002,ces002XmlStr);
                 }catch(Exception e){
                     //若出现异常，将报文状态置为“发送失败”
-                    ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
-                    shcpeDealInfo.setId(ces002IdInMysql);
-                    shcpeDealInfo.setMsgStatus((byte)-1);//报文状态置为“发送失败”
-                    try {
-                        shcpeDealInfoMapper.updateByPrimaryKeySelective(shcpeDealInfo);
-                    }catch (PersistenceException pe){
-                        e.printStackTrace();
-                    }
+                    updateMsgStatus(ces002IdInMysql);
+                    e.printStackTrace();
                 }
 
                 break;
@@ -130,21 +120,15 @@ public class DealMsg implements Runnable{
                     //组装“转贴现成交通知报文”ces003
                     share.msg_class.CES003Msg.MainBody ces003 = new share.msg_class.CES003Msg.MainBody();
                     String ces003XmlStr = createCes003(ces011,ces003);
-                    //存储ces012报文
+                    //存储ces003报文
                     long ces003IdInMysql = saveCes003ToMysql(ces003XmlStr,ces003);
                     try {
-                        //发送ces012报文
+                        //发送ces003报文
                         msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES003,ces003XmlStr);
                     }catch(Exception e){
                         //若出现异常，将报文状态置为“发送失败”
-                        ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
-                        shcpeDealInfo.setId(ces003IdInMysql);
-                        shcpeDealInfo.setMsgStatus((byte)-1);//报文状态置为“发送失败”
-                        try {
-                            shcpeDealInfoMapper.updateByPrimaryKeySelective(shcpeDealInfo);
-                        }catch (PersistenceException pe){
-                            e.printStackTrace();
-                        }
+                        updateMsgStatus(ces003IdInMysql);
+                        e.printStackTrace();
                     }
                 }
                 if(ces011.getRecInf().getRecCmd().equals("1")){//应答标识为1：终止
@@ -158,20 +142,29 @@ public class DealMsg implements Runnable{
                         msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES012,ces012XmlStr);
                     }catch(Exception e){
                         //若出现异常，将报文状态置为“发送失败”
-                        ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
-                        shcpeDealInfo.setId(ces012IdInMysql);
-                        shcpeDealInfo.setMsgStatus((byte)-1);//报文状态置为“发送失败”
-                        try {
-                            shcpeDealInfoMapper.updateByPrimaryKeySelective(shcpeDealInfo);
-                        }catch (PersistenceException pe){
-                            e.printStackTrace();
-                        }
+                        updateMsgStatus(ces012IdInMysql);
+                        e.printStackTrace();
                     }
                 }
                 break;
             default:
                 System.out.println("报文类型不正确!");
                 break;
+        }
+    }
+
+    /**
+     * 若调用发送报文接口出异常，则更新该报文状态为发送失败
+     * @param IdInMysql
+     */
+    private void updateMsgStatus(long IdInMysql) {
+        ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
+        shcpeDealInfo.setId(IdInMysql);
+        shcpeDealInfo.setMsgStatus((byte)-1);//报文状态置为“发送失败”
+        try {
+            shcpeDealInfoMapper.updateByPrimaryKeySelective(shcpeDealInfo);
+        }catch (PersistenceException pe){
+            pe.printStackTrace();
         }
     }
 
