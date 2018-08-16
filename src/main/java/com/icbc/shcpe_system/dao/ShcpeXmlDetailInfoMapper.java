@@ -4,8 +4,8 @@ import com.icbc.shcpe_system.model.ShcpeXmlDetailInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Mapper
+@Repository
 public interface ShcpeXmlDetailInfoMapper {
     int deleteByPrimaryKey(Long xmlId);
 

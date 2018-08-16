@@ -9,7 +9,7 @@ public class ShcpeDealInfo {
 
     private String trdDir;
 
-    private String msyType;
+    private String msgType;
 
     private Date updateTime;
 
@@ -49,12 +49,12 @@ public class ShcpeDealInfo {
         this.trdDir = trdDir == null ? null : trdDir.trim();
     }
 
-    public String getMsyType() {
-        return msyType;
+    public String getMsgType() {
+        return msgType;
     }
 
-    public void setMsyType(String msyType) {
-        this.msyType = msyType == null ? null : msyType.trim();
+    public void setMsgType(String msgType) {
+        this.msgType = msgType == null ? null : msgType.trim();
     }
 
     public Date getUpdateTime() {

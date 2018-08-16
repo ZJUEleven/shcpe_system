@@ -5,7 +5,7 @@
     <id column="ID" property="id" jdbcType="BIGINT" />
     <result column="MSG_ID" property="msgId" jdbcType="CHAR" />
     <result column="TRD_DIR" property="trdDir" jdbcType="CHAR" />
-    <result column="MSY_TYPE" property="msyType" jdbcType="VARCHAR" />
+    <result column="MSG_TYPE" property="msgType" jdbcType="VARCHAR" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="QUOTE_ID" property="quoteId" jdbcType="CHAR" />
     <result column="MSG_STATUS" property="msgStatus" jdbcType="TINYINT" />
@@ -15,7 +15,7 @@
     <result column="XML_ID" property="xmlId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, MSG_ID, TRD_DIR, MSY_TYPE, UPDATE_TIME, QUOTE_ID, MSG_STATUS, ERROR_REASON, TRD_STATUS, 
+    ID, MSG_ID, TRD_DIR, MSG_TYPE, UPDATE_TIME, QUOTE_ID, MSG_STATUS, ERROR_REASON, TRD_STATUS, 
     DEAL_ID, XML_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -32,11 +32,11 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into SHCPE_DEAL (MSG_ID, TRD_DIR, MSY_TYPE, 
+    insert into SHCPE_DEAL (MSG_ID, TRD_DIR, MSG_TYPE, 
       UPDATE_TIME, QUOTE_ID, MSG_STATUS, 
       ERROR_REASON, TRD_STATUS, DEAL_ID, 
       XML_ID)
-    values (#{msgId,jdbcType=CHAR}, #{trdDir,jdbcType=CHAR}, #{msyType,jdbcType=VARCHAR}, 
+    values (#{msgId,jdbcType=CHAR}, #{trdDir,jdbcType=CHAR}, #{msgType,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{quoteId,jdbcType=CHAR}, #{msgStatus,jdbcType=TINYINT}, 
       #{errorReason,jdbcType=VARCHAR}, #{trdStatus,jdbcType=TINYINT}, #{dealId,jdbcType=CHAR}, 
       #{xmlId,jdbcType=BIGINT})
@@ -53,8 +53,8 @@
       <if test="trdDir != null" >
         TRD_DIR,
       </if>
-      <if test="msyType != null" >
-        MSY_TYPE,
+      <if test="msgType != null" >
+        MSG_TYPE,
       </if>
       <if test="updateTime != null" >
         UPDATE_TIME,
@@ -85,8 +85,8 @@
       <if test="trdDir != null" >
         #{trdDir,jdbcType=CHAR},
       </if>
-      <if test="msyType != null" >
-        #{msyType,jdbcType=VARCHAR},
+      <if test="msgType != null" >
+        #{msgType,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -120,8 +120,8 @@
       <if test="trdDir != null" >
         TRD_DIR = #{trdDir,jdbcType=CHAR},
       </if>
-      <if test="msyType != null" >
-        MSY_TYPE = #{msyType,jdbcType=VARCHAR},
+      <if test="msgType != null" >
+        MSG_TYPE = #{msgType,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
         UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
@@ -151,7 +151,7 @@
     update SHCPE_DEAL
     set MSG_ID = #{msgId,jdbcType=CHAR},
       TRD_DIR = #{trdDir,jdbcType=CHAR},
-      MSY_TYPE = #{msyType,jdbcType=VARCHAR},
+      MSG_TYPE = #{msgType,jdbcType=VARCHAR},
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
       QUOTE_ID = #{quoteId,jdbcType=CHAR},
       MSG_STATUS = #{msgStatus,jdbcType=TINYINT},

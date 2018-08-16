@@ -4,8 +4,8 @@ import com.icbc.shcpe_system.model.ShcpeDealInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Mapper
+@Repository
 public interface ShcpeDealInfoMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -19,5 +19,5 @@ public interface ShcpeDealInfoMapper {
 
     int updateByPrimaryKey(ShcpeDealInfo record);
 
-    String selectNewestXmlByQuoteIdAndMsgType(String quoteId,String msgType);
+    String selectNewestXmlByQuoteIdAndMsgType(String msg,String msgType);
 }

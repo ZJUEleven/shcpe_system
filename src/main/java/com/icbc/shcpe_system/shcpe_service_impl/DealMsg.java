@@ -14,6 +14,7 @@ import com.icbc.shcpe_system.util.SnowFlakeForDealAndQuoteID;
 import com.icbc.shcpe_system.util.SnowFlakeForMsgID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import share.msg_class.CES002Msg.MainBody;
 
 import javax.xml.bind.*;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -175,7 +176,7 @@ public class DealMsg implements Runnable{
      * @param ces002
      * @return
      */
-    private long saveCes002ToMysql(String ces002XmlStr, share.msg_class.CES002Msg.MainBody ces002) {
+    private long saveCes002ToMysql(String ces002XmlStr, MainBody ces002) {
         //将报文信息存入对应的表中
         ShcpeXmlDetailInfo shcpeXmlDetailInfo = new ShcpeXmlDetailInfo();
         shcpeXmlDetailInfo.setXmlInfo(ces002XmlStr);
@@ -187,7 +188,7 @@ public class DealMsg implements Runnable{
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces002.getMsgId().getId());
         shcpeDealInfo.setTrdDir(ces002.getQuoteInf().getTrdDir().value());
-        shcpeDealInfo.setMsyType(MsgType.CES002);
+        shcpeDealInfo.setMsgType(MsgType.CES002);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setQuoteId(ces002.getQuoteInf().getQuoteId());
         shcpeDealInfo.setMsgStatus((byte)0);//报文状态置为“已发送”
@@ -369,7 +370,7 @@ public class DealMsg implements Runnable{
         ShcpeDealInfo shcpeDealInfo  = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces003.getMsgId().getId());
         shcpeDealInfo.setTrdDir(ces003.getQuoteInf().getTrdDir().value());
-        shcpeDealInfo.setMsyType(MsgType.CES003);
+        shcpeDealInfo.setMsgType(MsgType.CES003);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setQuoteId(ces003.getQuoteInf().getQuoteId());
         shcpeDealInfo.setMsgStatus((byte)0);//状态置为已发送
@@ -537,7 +538,7 @@ public class DealMsg implements Runnable{
         }
         ShcpeDealInfo shcpeDealInfo  = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces012.getMsgId().getId());
-        shcpeDealInfo.setMsyType(MsgType.CES012);
+        shcpeDealInfo.setMsgType(MsgType.CES012);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setQuoteId(ces012.getQuoteInf().getQuoteId());
         shcpeDealInfo.setMsgStatus((byte)0);//状态置为已发送
@@ -602,7 +603,7 @@ public class DealMsg implements Runnable{
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces011.getMsgId().getId());
-        shcpeDealInfo.setMsyType(msgType);
+        shcpeDealInfo.setMsgType(msgType);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setMsgStatus((byte)1);//报文状态置为已接收
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
@@ -632,7 +633,7 @@ public class DealMsg implements Runnable{
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces010.getMsgId().getId());
-        shcpeDealInfo.setMsyType(MsgType.CES010);
+        shcpeDealInfo.setMsgType(MsgType.CES010);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setMsgStatus((byte)0);//报文状态置为“已发送”
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
@@ -719,7 +720,7 @@ public class DealMsg implements Runnable{
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces001.getMsgId().getId());
         shcpeDealInfo.setTrdDir(ces001.getQuoteInf().getTrdDir().value());
-        shcpeDealInfo.setMsyType(msgType);
+        shcpeDealInfo.setMsgType(msgType);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setMsgStatus((byte)1);//报文状态置为已接收
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
