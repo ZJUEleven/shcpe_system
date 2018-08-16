@@ -309,7 +309,7 @@ public class DealMsg implements Runnable{
             //票据实际到期日
             ces002Bill.setMatDt(ces001Bill.getMatDt());
             //贴现日期
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String date = simpleDateFormat.format(new Date());
             XMLGregorianCalendar ISODate = null;
             try {
