@@ -22,6 +22,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -294,7 +295,7 @@ public class DealMsg implements Runnable{
         ces002.setBlist(new share.msg_class.CES002Msg.Blist());
         //票据
         share.msg_class.CES002Msg.Bill ces002Bill = new share.msg_class.CES002Msg.Bill();
-        for(int i = 0 ; i < ces001.getBlist().getBill().size() ; i++){
+        for(int i = 0 ; i < ces001.getBlist().getBill().size() ; i++) {
             share.msg_class.CES001Msg.Bill ces001Bill = ces001.getBlist().getBill().get(i);
             //票据号码
             ces002Bill.setCdNo(ces001Bill.getCdNo());
@@ -307,9 +308,17 @@ public class DealMsg implements Runnable{
             //票据实际到期日
             ces002Bill.setMatDt(ces001Bill.getMatDt());
             //贴现日期
-            ces002Bill.setDsctDt(xgcal);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            String date = simpleDateFormat.format(new Date());
+            XMLGregorianCalendar ISODate = null;
+            try {
+                ISODate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date);//生成样式为“yyyy-mm-dd”的XMLGregorianCalendar类
+            } catch (DatatypeConfigurationException e) {
+                e.printStackTrace();
+            }
+            ces002Bill.setDsctDt(ISODate);
             //出票日期
-            ces002Bill.setIssDt(xgcal);
+            ces002Bill.setIssDt(ISODate);
             //出票人名称
             ces002Bill.setDwrName("张三");
             //承兑人名称
