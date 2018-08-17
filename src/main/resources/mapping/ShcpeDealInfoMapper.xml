@@ -164,6 +164,6 @@
 
   <select id="selectNewestXmlByQuoteIdAndMsgType" parameterType="java.lang.String" resultType="java.lang.String">
     select XML_INFO from SHCPE_XML_DETAIL
-    where XML_ID = (select distinct XML_ID from SHCPE_DEAL where QUOTE_ID = #{arg0} and MSY_TYPE = #{arg1} order by UPDATE_TIME desc limit 1)
+    where XML_ID = (select distinct XML_ID from SHCPE_DEAL where QUOTE_ID = #{arg0} and MSG_TYPE = #{arg1} order by UPDATE_TIME desc limit 1)
   </select>
 </mapper>

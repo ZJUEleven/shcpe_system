@@ -426,9 +426,17 @@ public class DealMsg implements Runnable{
         //成交方式
         ces003.getDealInf().setTrdType(share.msg_class.CES003Msg.TrdType.TT_01);//TT01：询价成交；TT02：匿名点击；TT01：点击成交；TT01：应急成交
         //成交日
-        ces003.getDealInf().setTrdDate(xgcal);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = simpleDateFormat.format(new Date());
+        XMLGregorianCalendar ISODate = null;
+        try {
+            ISODate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date);//生成样式为“yyyy-mm-dd”的XMLGregorianCalendar类
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        ces003.getDealInf().setTrdDate(ISODate);
         //成交时间
-        ces003.getDealInf().setDealTime(xgcal);
+        ces003.getDealInf().setDealTime(ISODate);
         //成交状态
         ces003.getDealInf().setDealSta(share.msg_class.CES003Msg.DealSta.DS_01);//DS01：已成交；DS01：已撤销
         /*------------------------------设置报价单信息--------------------------------*/
