@@ -599,7 +599,7 @@ public class DealMsg implements Runnable{
 
         //设置终止原因
         ces012.setRefInf(new share.msg_class.CES012Msg.RefInf());
-        ces012.getRefInf().setRefCmd("对方终止交易！");
+        ces012.getRefInf().setRefCmd("0");//0:手工终止，1：超时终止
 
         return getXmlStrFromJava(ces012);
     }
