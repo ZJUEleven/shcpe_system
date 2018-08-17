@@ -147,6 +147,17 @@ public class DealMsg implements Runnable{
                         updateMsgStatus(ces012IdInMysql);
                         e.printStackTrace();
                     }
+                    //模拟并发，向中间件再发一条ces012报文
+                    //存储ces012报文
+                    long ces012IdInMysql_2 = saveCes012ToMysql(ces012XmlStr,ces012);
+                    try {
+                        //发送ces012报文
+                        msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES012,ces012XmlStr);
+                    }catch(Exception e){
+                        //若出现异常，将报文状态置为“发送失败”
+                        updateMsgStatus(ces012IdInMysql_2);
+                        e.printStackTrace();
+                    }
                 }
                 break;
             default:
