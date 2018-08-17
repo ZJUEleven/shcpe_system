@@ -436,7 +436,7 @@ public class DealMsg implements Runnable{
         }
         ces003.getDealInf().setTrdDate(ISODate);
         //成交时间
-        ces003.getDealInf().setDealTime(ISODate);
+        ces003.getDealInf().setDealTime(xgcal);
         //成交状态
         ces003.getDealInf().setDealSta(share.msg_class.CES003Msg.DealSta.DS_01);//DS01：已成交；DS01：已撤销
         /*------------------------------设置报价单信息--------------------------------*/
