@@ -59,6 +59,7 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
     private boolean isContinueDeal(String msgType, String msg, Boolean isXML) {
         if(isXML){
             msgHandleResult.setResultCode("1");
+            msgHandleResult.setErrorReason(null);
             //报文格式没错就开新线程处理业务
             dealMsg.setMsg(msg);
             dealMsg.setMsgType(msgType);
@@ -67,8 +68,8 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
             return true;
         }else {
             msgHandleResult.setResultCode("-1");
-            msgHandleResult.setErrorReason(MsgType.CES001 + "报文格式不正确！");
-            System.out.println(MsgType.CES001 + "报文校验失败！");
+            msgHandleResult.setErrorReason(msgType + "报文格式不正确！");
+            System.out.println(msgType + "报文校验失败！");
             return false;
         }
     }
