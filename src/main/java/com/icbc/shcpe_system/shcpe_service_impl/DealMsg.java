@@ -246,7 +246,12 @@ public class DealMsg implements Runnable{
         share.msg_class.CES002Msg.BusiType ces002BusiType = share.msg_class.CES002Msg.BusiType.fromValue(ces001.getQuoteInf().getBusiType().value());
         ces002.getQuoteInf().setBusiType(ces002BusiType);
         //交易方向
-        ces002.getQuoteInf().setTrdDir(share.msg_class.CES002Msg.TrdDir.fromValue(ces001.getQuoteInf().getTrdDir().value()));
+        if(ces001.getQuoteInf().getTrdDir().value().equals("TDD01")){
+            ces002.getQuoteInf().setTrdDir(share.msg_class.CES002Msg.TrdDir.fromValue("TDD02"));
+        }
+        if(ces001.getQuoteInf().getTrdDir().value().equals("TDD02")){
+            ces002.getQuoteInf().setTrdDir(share.msg_class.CES002Msg.TrdDir.fromValue("TDD01"));
+        }
         /*------设置本方信息-------*/
         ces002.setSlfInf(new share.msg_class.CES002Msg.SlfInf());
         //本方机构代码
