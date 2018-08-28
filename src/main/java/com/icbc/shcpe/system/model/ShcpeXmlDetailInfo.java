@@ -1,4 +1,4 @@
-package com.icbc.shcpe_system.model;
+package com.icbc.shcpe.system.model;
 
 public class ShcpeXmlDetailInfo {
     private Long xmlId;

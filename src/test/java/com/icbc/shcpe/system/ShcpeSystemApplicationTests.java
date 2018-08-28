@@ -1,4 +1,4 @@
-package com.icbc.shcpe_system;
+package com.icbc.shcpe.system;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

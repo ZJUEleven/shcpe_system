@@ -25,9 +25,9 @@
         <!-- 文件存放路径 -->
         <targetjavaProject>${basedir}\src\main\java\</targetjavaProject>
         <targetresourcesProject>${basedir}\src\main\resources\</targetresourcesProject>
-        <targetjavamodelPackage>com.icbc.shcpe_system.model</targetjavamodelPackage>
+        <targetjavamodelPackage>com.icbc.shcpe.system.model</targetjavamodelPackage>
         <targetsqlmapPackage>mapping</targetsqlmapPackage>
-        <targetjavaclientPackage>com.icbc.shcpe_system.dao</targetjavaclientPackage>
+        <targetjavaclientPackage>com.icbc.shcpe.system.dao</targetjavaclientPackage>
     </properties>
 
     <dependencies>

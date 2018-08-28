@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.icbc.shcpe_system.dao.ShcpeDealInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+<mapper namespace="com.icbc.shcpe.system.dao.ShcpeDealInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.icbc.shcpe.system.model.ShcpeDealInfo" >
     <id column="ID" property="id" jdbcType="BIGINT" />
     <result column="MSG_ID" property="msgId" jdbcType="CHAR" />
     <result column="TRD_DIR" property="trdDir" jdbcType="CHAR" />
@@ -28,7 +28,7 @@
     delete from SHCPE_DEAL
     where ID = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+  <insert id="insert" parameterType="com.icbc.shcpe.system.model.ShcpeDealInfo" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -41,7 +41,7 @@
       #{errorReason,jdbcType=VARCHAR}, #{trdStatus,jdbcType=TINYINT}, #{dealId,jdbcType=CHAR}, 
       #{xmlId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+  <insert id="insertSelective" parameterType="com.icbc.shcpe.system.model.ShcpeDealInfo" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -111,7 +111,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.icbc.shcpe.system.model.ShcpeDealInfo" >
     update SHCPE_DEAL
     <set >
       <if test="msgId != null" >
@@ -147,7 +147,7 @@
     </set>
     where ID = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.icbc.shcpe_system.model.ShcpeDealInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.icbc.shcpe.system.model.ShcpeDealInfo" >
     update SHCPE_DEAL
     set MSG_ID = #{msgId,jdbcType=CHAR},
       TRD_DIR = #{trdDir,jdbcType=CHAR},

@@ -1,20 +1,18 @@
-package com.icbc.shcpe_system;
+package com.icbc.shcpe.system;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.icbc.shcpe_system.model.ShcpeDealInfo;
-import com.icbc.shcpe_system.model.ShcpeXmlDetailInfo;
-import com.icbc.shcpe_system.shcpe_service_impl.DealMsg;
+import com.icbc.shcpe.system.dao.ShcpeDealInfoMapper;
+import com.icbc.shcpe.system.dao.ShcpeXmlDetailInfoMapper;
+import com.icbc.shcpe.system.shcpe.service.impl.DealMsg;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.icbc.shcpe_system.dao.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import share.middle_service.MsgHandlerForShcpe;
-import share.shcpe_service.InterfaceForOther;
+import share.middle.service.MsgHandlerForShcpe;
+import share.shcpe.service.InterfaceForOther;
 import share.util.MsgHandleResult;
-
-import java.util.Date;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

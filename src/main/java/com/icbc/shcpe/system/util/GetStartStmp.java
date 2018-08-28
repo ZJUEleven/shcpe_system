@@ -1,4 +1,4 @@
-package com.icbc.shcpe_system.util;
+package com.icbc.shcpe.system.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

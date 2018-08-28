@@ -1,10 +1,8 @@
-package com.icbc.shcpe_system;
+package com.icbc.shcpe.system;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(scanBasePackages = {"share.util", "com.icbc.shcpe_system"})
 public class ShcpeSystemApplication {

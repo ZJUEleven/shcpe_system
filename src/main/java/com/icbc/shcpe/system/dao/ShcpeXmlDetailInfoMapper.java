@@ -1,6 +1,6 @@
-package com.icbc.shcpe_system.dao;
+package com.icbc.shcpe.system.dao;
 
-import com.icbc.shcpe_system.model.ShcpeXmlDetailInfo;
+import com.icbc.shcpe.system.model.ShcpeXmlDetailInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

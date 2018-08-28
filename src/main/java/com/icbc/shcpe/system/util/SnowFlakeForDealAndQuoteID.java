@@ -1,4 +1,4 @@
-package com.icbc.shcpe_system.util;
+package com.icbc.shcpe.system.util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @date 2016/11/26
  */
 @Component
-public class SnowFlakeForMsgID {
+public class SnowFlakeForDealAndQuoteID {
 
     public void setSTART_STMP(long START_STMP) {
         this.START_STMP = START_STMP;
@@ -20,14 +20,14 @@ public class SnowFlakeForMsgID {
      * 起始的时间戳
      */
 
-    private  long START_STMP = new GetStartStmp().getStartStmp("00:00:00");//以当天日期零点作为开始时间戳
+    private  long START_STMP = getSecondTimestamp(new GetStartStmp().getStartStmp("09:00:00"));//以当天日期零点作为开始时间戳
 
     /**
      * 每一部分占用的位数
      */
     private final static long SEQUENCE_BIT = 3; //序列号占用的位数
-    private final static long MACHINE_BIT = 2;   //机器标识占用的位数
-    private final static long DATACENTER_BIT = 2;//数据中心占用的位数
+    private final static long MACHINE_BIT = 1;   //机器标识占用的位数
+    private final static long DATACENTER_BIT = 1;//数据中心占用的位数
 
     /**
      * 每一部分的最大值
@@ -50,7 +50,7 @@ public class SnowFlakeForMsgID {
     private long sequence = 0L; //序列号
     private long lastStmp = -1L;//上一次时间戳
 
-    public SnowFlakeForMsgID() {
+    public SnowFlakeForDealAndQuoteID() {
         if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
             throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
         }
@@ -71,14 +71,14 @@ public class SnowFlakeForMsgID {
         }
 
         if (currStmp == lastStmp) {
-            //相同毫秒内，序列号自增
+            //相同秒内，序列号自增
             sequence = (sequence + 1) & MAX_SEQUENCE;
-            //同一毫秒的序列数已经达到最大
+            //同一秒的序列数已经达到最大
             if (sequence == 0L) {
                 currStmp = getNextMill();
             }
         } else {
-            //不同毫秒内，序列号置为0
+            //不同秒内，序列号置为0
             sequence = 0L;
         }
 
@@ -99,7 +99,11 @@ public class SnowFlakeForMsgID {
     }
 
     private long getNewstmp() {
-        return System.currentTimeMillis();
+        return getSecondTimestamp(System.currentTimeMillis());
+    }
+    private int getSecondTimestamp(long millisecond){
+        String timestamp = String.valueOf(millisecond/1000);
+        return Integer.valueOf(timestamp);
     }
 
 //    public static void main(String[] args) {

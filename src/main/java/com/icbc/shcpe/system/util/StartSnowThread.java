@@ -1,4 +1,4 @@
-package com.icbc.shcpe_system.util;
+package com.icbc.shcpe.system.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

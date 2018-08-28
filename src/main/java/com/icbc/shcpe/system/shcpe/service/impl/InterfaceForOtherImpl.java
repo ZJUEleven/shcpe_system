@@ -1,7 +1,7 @@
-package com.icbc.shcpe_system.shcpe_service_impl;
+package com.icbc.shcpe.system.shcpe.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.icbc.shcpe_system.util.MsgType;
+import com.icbc.shcpe.system.util.MsgType;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.OutputFormat;
@@ -9,7 +9,7 @@ import org.dom4j.io.SAXValidator;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.util.XMLErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import share.shcpe_service.InterfaceForOther;
+import share.shcpe.service.InterfaceForOther;
 import share.util.MsgHandleResult;
 import share.util.MsgRestriction;
 

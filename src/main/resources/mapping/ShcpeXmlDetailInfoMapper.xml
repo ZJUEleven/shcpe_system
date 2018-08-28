@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.icbc.shcpe_system.dao.ShcpeXmlDetailInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.icbc.shcpe_system.model.ShcpeXmlDetailInfo" >
+<mapper namespace="com.icbc.shcpe.system.dao.ShcpeXmlDetailInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.icbc.shcpe.system.model.ShcpeXmlDetailInfo" >
     <id column="XML_ID" property="xmlId" jdbcType="BIGINT" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.icbc.shcpe_system.model.ShcpeXmlDetailInfo" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="com.icbc.shcpe.system.model.ShcpeXmlDetailInfo" extends="BaseResultMap" >
     <result column="XML_INFO" property="xmlInfo" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -25,14 +25,14 @@
     delete from SHCPE_XML_DETAIL
     where XML_ID = #{xmlId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.icbc.shcpe_system.model.ShcpeXmlDetailInfo" >
+  <insert id="insert" parameterType="com.icbc.shcpe.system.model.ShcpeXmlDetailInfo" >
     <selectKey resultType="java.lang.Long" keyProperty="xmlId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into SHCPE_XML_DETAIL (XML_INFO)
     values (#{xmlInfo,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.icbc.shcpe_system.model.ShcpeXmlDetailInfo" >
+  <insert id="insertSelective" parameterType="com.icbc.shcpe.system.model.ShcpeXmlDetailInfo" >
     <selectKey resultType="java.lang.Long" keyProperty="xmlId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -48,7 +48,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.icbc.shcpe_system.model.ShcpeXmlDetailInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.icbc.shcpe.system.model.ShcpeXmlDetailInfo" >
     update SHCPE_XML_DETAIL
     <set >
       <if test="xmlInfo != null" >
@@ -57,7 +57,7 @@
     </set>
     where XML_ID = #{xmlId,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.icbc.shcpe_system.model.ShcpeXmlDetailInfo" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.icbc.shcpe.system.model.ShcpeXmlDetailInfo" >
     update SHCPE_XML_DETAIL
     set XML_INFO = #{xmlInfo,jdbcType=LONGVARCHAR}
     where XML_ID = #{xmlId,jdbcType=BIGINT}
