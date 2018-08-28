@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SnowFlakeForDealAndQuoteID {
 
+    private static final long TIME_SPACE = 24*60*60*1000l;//24小时时间间隔的时间戳
+
     public void setSTART_STMP(long START_STMP) {
         this.START_STMP = START_STMP;
     }
@@ -66,6 +68,12 @@ public class SnowFlakeForDealAndQuoteID {
      */
     public synchronized long nextId() {
         long currStmp = getNewstmp();
+        //判断当前时间与开始时间间隔是否达到24小时，若达到指定间隔，重置开始时间
+        GetStartStmp getStaStmp = new GetStartStmp();
+        if((currStmp - START_STMP) >= TIME_SPACE){
+            setSTART_STMP(getStaStmp.getStartStmp("00:00:00"));
+        }
+
         if (currStmp < lastStmp) {
             throw new RuntimeException("Clock moved backwards.  Refusing to generate id");
         }

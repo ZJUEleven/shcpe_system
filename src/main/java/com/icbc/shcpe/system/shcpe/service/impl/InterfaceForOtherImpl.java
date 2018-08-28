@@ -117,7 +117,6 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
             if (errorHandler.getErrors().hasContent()) {
                 System.out.println("XML信息通过XSD文件校验失败！");
                 writer.write(errorHandler.getErrors());
-                isXML = false;
             } else {
                 System.out.println("Good! XML信息通过XSD文件校验成功！");
                 isXML = true;
