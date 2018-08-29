@@ -5,6 +5,7 @@ public class MsgClass {
     private MsgClass() {
         throw new IllegalStateException("Utility class");
     }
+
     public static final String CAS001CLASS = "share.msg.cas001.MainBody";
     public static final String CES001CLASS = "share.msg.ces001.MainBody";
     public static final String CES002CLASS = "share.msg.ces002.MainBody";

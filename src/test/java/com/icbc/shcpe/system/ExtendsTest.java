@@ -4,11 +4,12 @@ import org.junit.Test;
 
 public class ExtendsTest {
     String str = "这是父类";
-    public void common(){
+
+    public void common() {
         System.out.println(str);
     }
 
-    class child extends ExtendsTest{
+    class child extends ExtendsTest {
         String str = "子类";
     }
 

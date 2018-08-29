@@ -33,11 +33,11 @@ import java.util.GregorianCalendar;
 
 @Service
 @Scope("prototype")
-public class DealMsg implements Runnable{
+public class DealMsg implements Runnable {
     private static final String MEMBERID = "000000";//会员代码（6位）
     private static final String BRANCHID = "000000000";//机构代码（9位）
-    private static final String QUTOTYPE= "DT";//第一位为报价方式代码，第二位为品种代码
-    private static final String DEALTYPE= "TD";//前2位为品种代码
+    private static final String QUTOTYPE = "DT";//第一位为报价方式代码，第二位为品种代码
+    private static final String DEALTYPE = "TD";//前2位为品种代码
 
     private String msgType;
     private String msg;
@@ -68,11 +68,11 @@ public class DealMsg implements Runnable{
 
     @Override
     public void run() {
-        switch (msgType){
-            case MsgType.CES001 :
+        switch (msgType) {
+            case MsgType.CES001:
                 dealCes001();
                 break;
-            case MsgType.CES011 :
+            case MsgType.CES011:
                 dealCes011();
                 break;
             default:
@@ -90,52 +90,50 @@ public class DealMsg implements Runnable{
         try {
             ces011MsgClass = Class.forName(MsgClass.CES011CLASS);
         } catch (ClassNotFoundException e) {
-            logger.info(e.getMessage());
-
             logger.error("got exception", e);
         }
-        share.msg.ces011.MainBody ces011 = (share.msg.ces011.MainBody) getJavaFromXmlStr(ces011MsgClass,msg);
+        share.msg.ces011.MainBody ces011 = (share.msg.ces011.MainBody) getJavaFromXmlStr(ces011MsgClass, msg);
         //存储CES011报文信息
-        saveCes011ToMysql(msgType,msg,ces011);
-        if(ces011.getRecInf().getRecCmd().equals("0")){//应答标识为0：成交
+        saveCes011ToMysql(msgType, msg, ces011);
+        if (ces011.getRecInf().getRecCmd().equals("0")) {//应答标识为0：成交
             //组装“转贴现成交通知报文”ces003
             share.msg.ces003.MainBody ces003 = new share.msg.ces003.MainBody();
-            String ces003XmlStr = createCes003(ces011,ces003);
+            String ces003XmlStr = createCes003(ces011, ces003);
             //存储ces003报文
-            long ces003IdInMysql = saveCes003ToMysql(ces003XmlStr,ces003);
+            long ces003IdInMysql = saveCes003ToMysql(ces003XmlStr, ces003);
             try {
                 //发送ces003报文
-                msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES003,ces003XmlStr);
-            }catch(Exception e){
+                msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES003, ces003XmlStr);
+            } catch (Exception e) {
                 //若出现异常，将报文状态置为“发送失败”
                 updateMsgStatus(ces003IdInMysql);
-                logger.info(e.getMessage());
+                logger.error("got exception", e);
             }
         }
-        if(ces011.getRecInf().getRecCmd().equals("1")){//应答标识为1：终止
+        if (ces011.getRecInf().getRecCmd().equals("1")) {//应答标识为1：终止
             //组装“对话报价终止通知报文”ces012
             share.msg.ces012.MainBody ces012 = new share.msg.ces012.MainBody();
-            String ces012XmlStr = createCes012(ces011,ces012);
+            String ces012XmlStr = createCes012(ces011, ces012);
             //存储ces012报文
-            long ces012IdInMysql = saveCes012ToMysql(ces012XmlStr,ces012);
+            long ces012IdInMysql = saveCes012ToMysql(ces012XmlStr, ces012);
             try {
                 //发送ces012报文
-                msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES012,ces012XmlStr);
-            }catch(Exception e){
+                msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES012, ces012XmlStr);
+            } catch (Exception e) {
                 //若出现异常，将报文状态置为“发送失败”
                 updateMsgStatus(ces012IdInMysql);
-                logger.info(e.getMessage());
+                logger.error("got exception", e);
             }
             //模拟并发，向中间件再发一条ces012报文
             //存储ces012报文
-            long ces012IdInMysql2 = saveCes012ToMysql(ces012XmlStr,ces012);
+            long ces012IdInMysql2 = saveCes012ToMysql(ces012XmlStr, ces012);
             try {
                 //发送ces012报文
-                msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES012,ces012XmlStr);
-            }catch(Exception e){
+                msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES012, ces012XmlStr);
+            } catch (Exception e) {
                 //若出现异常，将报文状态置为“发送失败”
                 updateMsgStatus(ces012IdInMysql2);
-                logger.info(e.getMessage());
+                logger.error("got exception", e);
             }
         }
     }
@@ -150,57 +148,59 @@ public class DealMsg implements Runnable{
         try {
             ces001MsgClass = Class.forName(MsgClass.CES001CLASS);
         } catch (ClassNotFoundException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
-        share.msg.ces001.MainBody ces001 = (share.msg.ces001.MainBody) getJavaFromXmlStr(ces001MsgClass,msg);
+        share.msg.ces001.MainBody ces001 = (share.msg.ces001.MainBody) getJavaFromXmlStr(ces001MsgClass, msg);
         //存储CES001报文信息
-        saveCes001ToMysql(msgType,msg,ces001);
+        saveCes001ToMysql(msgType, msg, ces001);
         //组装“交易业务确认报文”ces010
         share.msg.ces010.MainBody ces010 = new share.msg.ces010.MainBody();
-        String ces010XmlStr = createCes010(ces001,ces010);
+        String ces010XmlStr = createCes010(ces001, ces010);
         //存储ces010报文信息
-        long ces010IdInMysql = saveCes010ToMysql(ces010XmlStr,ces010);
+        long ces010IdInMysql = saveCes010ToMysql(ces010XmlStr, ces010);
         try {
             //发送确认报文
-            msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES010,ces010XmlStr);
-        }catch(Exception e){
+            msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES010, ces010XmlStr);
+        } catch (Exception e) {
             //若出现异常，将报文状态置为“发送失败”
             updateMsgStatus(ces010IdInMysql);
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
 
         //组装“转贴现对话报价转发报文”ces002
-        share.msg.ces002.MainBody ces002 = new  share.msg.ces002.MainBody();
-        String  ces002XmlStr = createCes002(ces001,ces002);
+        share.msg.ces002.MainBody ces002 = new share.msg.ces002.MainBody();
+        String ces002XmlStr = createCes002(ces001, ces002);
         //存储ces002报文信息
-        long ces002IdInMysql = saveCes002ToMysql(ces002XmlStr,ces002);
+        long ces002IdInMysql = saveCes002ToMysql(ces002XmlStr, ces002);
         try {
             //发送ces002报文
-            msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES002,ces002XmlStr);
-        }catch(Exception e){
+            msgHandlerForShcpe.sendMsgToBusiSide(MsgType.CES002, ces002XmlStr);
+        } catch (Exception e) {
             //若出现异常，将报文状态置为“发送失败”
             updateMsgStatus(ces002IdInMysql);
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
     }
 
     /**
      * 若调用发送报文接口出异常，则更新该报文状态为发送失败
+     *
      * @param idInMysql
      */
     private void updateMsgStatus(long idInMysql) {
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setId(idInMysql);
-        shcpeDealInfo.setMsgStatus((byte)-1);//报文状态置为“发送失败”
+        shcpeDealInfo.setMsgStatus((byte) -1);//报文状态置为“发送失败”
         try {
             shcpeDealInfoMapper.updateByPrimaryKeySelective(shcpeDealInfo);
-        }catch (PersistenceException pe){
-            logger.info(pe.getMessage());
+        } catch (PersistenceException pe) {
+            logger.error("got exception", pe);
         }
     }
 
     /**
      * 将ces002报文存入数据库
+     *
      * @param ces002XmlStr
      * @param ces002
      * @return
@@ -211,8 +211,8 @@ public class DealMsg implements Runnable{
         shcpeXmlDetailInfo.setXmlInfo(ces002XmlStr);
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces002.getMsgId().getId());
@@ -220,34 +220,35 @@ public class DealMsg implements Runnable{
         shcpeDealInfo.setMsgType(MsgType.CES002);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setQuoteId(ces002.getQuoteInf().getQuoteId());
-        shcpeDealInfo.setMsgStatus((byte)0);//报文状态置为“已发送”
+        shcpeDealInfo.setMsgStatus((byte) 0);//报文状态置为“已发送”
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         return shcpeDealInfo.getId();
     }
 
     /**
      * 组装ces002报文
+     *
      * @param ces001
      * @param ces002
      * @return
      */
     private String createCes002(share.msg.ces001.MainBody ces001, share.msg.ces002.MainBody ces002) {
         /*------设置报文标识（报文标识号+报文时间）--------*/
-        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
+        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d", snowFlakeForMsgID.nextId());//报文标识号
         ces002.setMsgId(new share.msg.ces002.MsgId());
         ces002.getMsgId().setId(msgId);
         //生成XMLGregorianCalendar类
-        GregorianCalendar gcal =new GregorianCalendar();
+        GregorianCalendar gcal = new GregorianCalendar();
         XMLGregorianCalendar xgcal = null;
         try {
-            xgcal= DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+            xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
         ces002.getMsgId().setCreDtTm(xgcal);//报文时间
         /*------------设置原报文标识------------*/
@@ -264,10 +265,10 @@ public class DealMsg implements Runnable{
         share.msg.ces002.BusiType ces002BusiType = share.msg.ces002.BusiType.fromValue(ces001.getQuoteInf().getBusiType().value());
         ces002.getQuoteInf().setBusiType(ces002BusiType);
         //交易方向
-        if(ces001.getQuoteInf().getTrdDir().value().equals("TDD01")){
+        if (ces001.getQuoteInf().getTrdDir().value().equals("TDD01")) {
             ces002.getQuoteInf().setTrdDir(share.msg.ces002.TrdDir.fromValue("TDD02"));
         }
-        if(ces001.getQuoteInf().getTrdDir().value().equals("TDD02")){
+        if (ces001.getQuoteInf().getTrdDir().value().equals("TDD02")) {
             ces002.getQuoteInf().setTrdDir(share.msg.ces002.TrdDir.fromValue("TDD01"));
         }
         /*------设置本方信息-------*/
@@ -330,7 +331,7 @@ public class DealMsg implements Runnable{
         ces002.setBlist(new share.msg.ces002.Blist());
         //票据
         share.msg.ces002.Bill ces002Bill = new share.msg.ces002.Bill();
-        for(int i = 0 ; i < ces001.getBlist().getBill().size() ; i++) {
+        for (int i = 0; i < ces001.getBlist().getBill().size(); i++) {
             share.msg.ces001.Bill ces001Bill = ces001.getBlist().getBill().get(i);
             //票据号码
             ces002Bill.setCdNo(ces001Bill.getCdNo());
@@ -349,7 +350,7 @@ public class DealMsg implements Runnable{
             try {
                 iSODate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date);//生成样式为“yyyy-mm-dd”的XMLGregorianCalendar类
             } catch (DatatypeConfigurationException e) {
-                logger.info(e.getMessage());
+                logger.error("got exception", e);
             }
             ces002Bill.setDsctDt(iSODate);
             //出票日期
@@ -388,6 +389,7 @@ public class DealMsg implements Runnable{
 
     /**
      * 将ces003报文存入数据库
+     *
      * @param ces003XmlStr
      * @param ces003
      * @return
@@ -398,29 +400,30 @@ public class DealMsg implements Runnable{
         shcpeXmlDetailInfo.setXmlInfo(ces003XmlStr);
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
-        ShcpeDealInfo shcpeDealInfo  = new ShcpeDealInfo();
+        ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces003.getMsgId().getId());
         shcpeDealInfo.setTrdDir(ces003.getQuoteInf().getTrdDir().value());
         shcpeDealInfo.setMsgType(MsgType.CES003);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setQuoteId(ces003.getQuoteInf().getQuoteId());
-        shcpeDealInfo.setMsgStatus((byte)0);//状态置为已发送
+        shcpeDealInfo.setMsgStatus((byte) 0);//状态置为已发送
         shcpeDealInfo.setDealId(ces003.getDealInf().getDealId());
-        shcpeDealInfo.setTrdStatus((byte)1);//交易状态置为交易成功（-1:交易失败/终止，0:交易中，1：交易成功）
+        shcpeDealInfo.setTrdStatus((byte) 1);//交易状态置为交易成功（-1:交易失败/终止，0:交易中，1：交易成功）
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         return shcpeDealInfo.getId();
     }
 
     /**
      * 组装ces003报文
+     *
      * @param ces011
      * @param ces003
      * @return
@@ -442,20 +445,20 @@ public class DealMsg implements Runnable{
         ces003Bill.setPayInt(new share.msg.ces003.CurrencyAndAmount());
         ces003Bill.setSetAmt(new share.msg.ces003.CurrencyAndAmount());
         /*------------------------------设置报文标识（报文标识号+报文时间）---------------------------------*/
-        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
+        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d", snowFlakeForMsgID.nextId());//报文标识号
         ces003.getMsgId().setId(msgId);
         //生成XMLGregorianCalendar类
-        GregorianCalendar gcal =new GregorianCalendar();
+        GregorianCalendar gcal = new GregorianCalendar();
         XMLGregorianCalendar xgcal = null;
         try {
-            xgcal= DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+            xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
         ces003.getMsgId().setCreDtTm(xgcal);//报文时间
         /*------------------------------设置成交信息--------------------------------*/
         //成交单编号
-        String dealId = DEALTYPE + getDate() + String.format("%6d",snowFlakeForDealAndQuoteID.nextId());
+        String dealId = DEALTYPE + getDate() + String.format("%6d", snowFlakeForDealAndQuoteID.nextId());
         ces003.getDealInf().setDealId(dealId);
         //成交方式
         ces003.getDealInf().setTrdType(share.msg.ces003.TrdType.TT_01);//TT01：询价成交；TT02：匿名点击；TT01：点击成交；TT01：应急成交
@@ -466,7 +469,7 @@ public class DealMsg implements Runnable{
         try {
             iSODate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date);//生成样式为“yyyy-mm-dd”的XMLGregorianCalendar类
         } catch (DatatypeConfigurationException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
         ces003.getDealInf().setTrdDate(iSODate);
         //成交时间
@@ -483,14 +486,14 @@ public class DealMsg implements Runnable{
         ces003.getQuoteInf().setTrdDir(share.msg.ces003.TrdDir.TDD_01);//TDD01:买入；TDD02:卖出
         /*-----------设置本方信息---------------*/
         //从表中查找到最新的ces001报文信息，从中提取本方信息
-        String ces001Xml = shcpeDealInfoMapper.selectNewestXmlByQuoteIdAndMsgType(ces003.getQuoteInf().getQuoteId(),MsgType.CES001);
+        String ces001Xml = shcpeDealInfoMapper.selectNewestXmlByQuoteIdAndMsgType(ces003.getQuoteInf().getQuoteId(), MsgType.CES001);
         Class ces001MsgClass = null;
         try {
             ces001MsgClass = Class.forName(MsgClass.CES001CLASS);
         } catch (ClassNotFoundException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
-        share.msg.ces001.MainBody ces001 = (share.msg.ces001.MainBody)getJavaFromXmlStr(ces001MsgClass,ces001Xml);
+        share.msg.ces001.MainBody ces001 = (share.msg.ces001.MainBody) getJavaFromXmlStr(ces001MsgClass, ces001Xml);
         //本方机构代码
         ces003.getSlfInf().setReqBranch(ces001.getSlfInf().getReqBranch());
         //本方非法人产品
@@ -538,7 +541,7 @@ public class DealMsg implements Runnable{
         ces003.getQuoteFctInf().setYieldRate(ces001.getQuoteFctInf().getYieldRate());
         /*-----------设置票据清单---------------*/
         //票据
-        for (int i = 0; i < ces001.getBlist().getBill().size(); i++){
+        for (int i = 0; i < ces001.getBlist().getBill().size(); i++) {
             share.msg.ces001.Bill ces001Bill = ces001.getBlist().getBill().get(i);
             //票据号码
             ces003Bill.setCdNo(ces001Bill.getCdNo());
@@ -565,6 +568,7 @@ public class DealMsg implements Runnable{
 
     /**
      * 将ces012报文存入数据库
+     *
      * @param ces012XmlStr
      * @param ces012
      * @return
@@ -575,43 +579,44 @@ public class DealMsg implements Runnable{
         shcpeXmlDetailInfo.setXmlInfo(ces012XmlStr);
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
-        ShcpeDealInfo shcpeDealInfo  = new ShcpeDealInfo();
+        ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces012.getMsgId().getId());
         shcpeDealInfo.setMsgType(MsgType.CES012);
         shcpeDealInfo.setUpdateTime(new Date());
         shcpeDealInfo.setQuoteId(ces012.getQuoteInf().getQuoteId());
-        shcpeDealInfo.setMsgStatus((byte)0);//状态置为已发送
-        shcpeDealInfo.setTrdStatus((byte)1);//交易状态置为交易成功（-1:交易失败/终止，0:交易中，1：交易成功）
+        shcpeDealInfo.setMsgStatus((byte) 0);//状态置为已发送
+        shcpeDealInfo.setTrdStatus((byte) 1);//交易状态置为交易成功（-1:交易失败/终止，0:交易中，1：交易成功）
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         return shcpeDealInfo.getId();
     }
 
     /**
      * 组装ces012报文信息
+     *
      * @param ces011
      * @param ces012
      * @return
      */
     private String createCes012(share.msg.ces011.MainBody ces011, share.msg.ces012.MainBody ces012) {
         //设置报文标识（报文标识号+报文时间）
-        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
+        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d", snowFlakeForMsgID.nextId());//报文标识号
         ces012.setMsgId(new share.msg.ces012.MsgId());
         ces012.getMsgId().setId(msgId);
         //生成XMLGregorianCalendar类
-        GregorianCalendar gcal =new GregorianCalendar();
+        GregorianCalendar gcal = new GregorianCalendar();
         XMLGregorianCalendar xgcal = null;
         try {
-            xgcal= DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+            xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
         ces012.getMsgId().setCreDtTm(xgcal);//报文时间
         //设置报价单信息（报价单编号+业务类型）
@@ -629,6 +634,7 @@ public class DealMsg implements Runnable{
 
     /**
      * 将ces011报文存入数据库
+     *
      * @param msgType
      * @param msg
      * @param ces011
@@ -640,26 +646,27 @@ public class DealMsg implements Runnable{
         shcpeXmlDetailInfo.setXmlInfo(msg);
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces011.getMsgId().getId());
         shcpeDealInfo.setMsgType(msgType);
         shcpeDealInfo.setUpdateTime(new Date());
-        shcpeDealInfo.setMsgStatus((byte)1);//报文状态置为已接收
+        shcpeDealInfo.setMsgStatus((byte) 1);//报文状态置为已接收
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
         shcpeDealInfo.setQuoteId(ces011.getQuoteInf().getQuoteId());
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
-        return  shcpeDealInfo.getId();
+        return shcpeDealInfo.getId();
     }
 
     /**
      * 将ces010报文存入数据库
+     *
      * @param ces010XmlStr
      * @param ces010
      * @return
@@ -670,42 +677,43 @@ public class DealMsg implements Runnable{
         shcpeXmlDetailInfo.setXmlInfo(ces010XmlStr);
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces010.getMsgId().getId());
         shcpeDealInfo.setMsgType(MsgType.CES010);
         shcpeDealInfo.setUpdateTime(new Date());
-        shcpeDealInfo.setMsgStatus((byte)0);//报文状态置为“已发送”
+        shcpeDealInfo.setMsgStatus((byte) 0);//报文状态置为“已发送”
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
         shcpeDealInfo.setQuoteId(ces010.getQuoteInf().getQuoteId());
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         return shcpeDealInfo.getId();
     }
 
     /**
      * 生成ces010报文
+     *
      * @param ces001
      * @param ces010
      * @return
      */
     private String createCes010(share.msg.ces001.MainBody ces001, share.msg.ces010.MainBody ces010) {
-       //设置报文标识（报文标识号+报文时间）
-        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d",snowFlakeForMsgID.nextId());//报文标识号
+        //设置报文标识（报文标识号+报文时间）
+        String msgId = MEMBERID + BRANCHID + getDate() + String.format("%10d", snowFlakeForMsgID.nextId());//报文标识号
         ces010.setMsgId(new share.msg.ces010.MsgId());
         ces010.getMsgId().setId(msgId);
         //生成XMLGregorianCalendar类
-        GregorianCalendar gcal =new GregorianCalendar();
+        GregorianCalendar gcal = new GregorianCalendar();
         XMLGregorianCalendar xgcal = null;
         try {
-            xgcal= DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+            xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
         ces010.getMsgId().setCreDtTm(xgcal);//报文时间
         //设置原报文标识
@@ -725,7 +733,8 @@ public class DealMsg implements Runnable{
     }
 
     /**
-     *将java类转换为对应的String类型报文
+     * 将java类转换为对应的String类型报文
+     *
      * @param object
      * @return
      */
@@ -744,7 +753,7 @@ public class DealMsg implements Runnable{
             return stringWriter.toString();
 
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
             return "-1";
         }
     }
@@ -756,32 +765,33 @@ public class DealMsg implements Runnable{
         shcpeXmlDetailInfo.setXmlInfo(msg);
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces001.getMsgId().getId());
         shcpeDealInfo.setTrdDir(ces001.getQuoteInf().getTrdDir().value());
         shcpeDealInfo.setMsgType(msgType);
         shcpeDealInfo.setUpdateTime(new Date());
-        shcpeDealInfo.setMsgStatus((byte)1);//报文状态置为已接收
+        shcpeDealInfo.setMsgStatus((byte) 1);//报文状态置为已接收
         shcpeDealInfo.setXmlId(shcpeXmlDetailInfo.getXmlId());
-        if(ces001.getQuoteInf().getQuoteId()== null){
+        if (ces001.getQuoteInf().getQuoteId() == null) {
             String dateString = getDate();//获取年月日
-            String qutoid = QUTOTYPE + dateString + String.format("%06d",snowFlakeForDealAndQuoteID.nextId());//成交单号
+            String qutoid = QUTOTYPE + dateString + String.format("%06d", snowFlakeForDealAndQuoteID.nextId());//成交单号
             ces001.getQuoteInf().setQuoteId(qutoid);
         }
         shcpeDealInfo.setQuoteId(ces001.getQuoteInf().getQuoteId());
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
-        }catch (PersistenceException e){
-            logger.info(e.getMessage());
+        } catch (PersistenceException e) {
+            logger.error("got exception", e);
         }
-        return  shcpeDealInfo.getId();
+        return shcpeDealInfo.getId();
     }
 
     /**
      * 获取当前年月日的String类型
+     *
      * @return
      */
     private String getDate() {
@@ -795,20 +805,21 @@ public class DealMsg implements Runnable{
 
     /**
      * 将接收到的string类型报文转换为对应对象
+     *
      * @param msgClass
      * @param msg
      * @return
      */
-    private Object getJavaFromXmlStr(Class msgClass, String msg){
+    private Object getJavaFromXmlStr(Class msgClass, String msg) {
         Object xmlObject = null;
         try {
             JAXBContext context = JAXBContext.newInstance(msgClass);
             // 进行将Xml转成对象的核心接口
             Unmarshaller unmarshaller = context.createUnmarshaller();
             StringReader sr = new StringReader(msg);
-            xmlObject = ((JAXBElement)unmarshaller.unmarshal(sr)).getValue();
+            xmlObject = ((JAXBElement) unmarshaller.unmarshal(sr)).getValue();
         } catch (JAXBException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
         }
         return xmlObject;
 

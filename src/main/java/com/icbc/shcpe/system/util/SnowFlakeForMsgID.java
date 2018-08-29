@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * twitter的snowflake算法 -- java实现
- * 
+ *
  * @author beyond
  * @date 2016/11/26
  */
 @Component
 public class SnowFlakeForMsgID {
 
-    private static final long TIME_SPACE = 24*60*60*1000l;//24小时时间间隔的时间戳
+    private static final long TIME_SPACE = 24 * 60 * 60 * 1000l;//24小时时间间隔的时间戳
 
     /**
      * 起始的时间戳
@@ -24,7 +24,7 @@ public class SnowFlakeForMsgID {
         this.startStmp = startStmp;
     }
 
-    public long getStartStmp(){
+    public long getStartStmp() {
         return this.startStmp;
     }
 
@@ -38,10 +38,12 @@ public class SnowFlakeForMsgID {
     public long getSequenceBit() {
         return SEQUENCE_BIT;
     }
-    public long getMachineBit(){
+
+    public long getMachineBit() {
         return MACHINE_BIT;
     }
-    public long getDatacenterBit(){
+
+    public long getDatacenterBit() {
         return DATACENTER_BIT;
     }
 
@@ -84,7 +86,7 @@ public class SnowFlakeForMsgID {
         long currStmp = getNewstmp();
         //判断当前时间与开始时间间隔是否达到24小时，若达到指定间隔，重置开始时间
         GetStartStmp getStaStmp = new GetStartStmp();
-        if((currStmp -  getStartStmp()) >= TIME_SPACE){
+        if ((currStmp - getStartStmp()) >= TIME_SPACE) {
             setStartStmp(getStaStmp.getStartStmp("00:00:00"));
         }
 
@@ -106,7 +108,7 @@ public class SnowFlakeForMsgID {
 
         lastStmp = currStmp;
 
-        return (currStmp -  getStartStmp()) << timestmpLeft //时间戳部分
+        return (currStmp - getStartStmp()) << timestmpLeft //时间戳部分
                 | datacenterId << datacenterLeft       //数据中心部分
                 | machineId << machineLeft             //机器标识部分
                 | sequence;                             //序列号部分

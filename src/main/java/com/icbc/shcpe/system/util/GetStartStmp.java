@@ -16,7 +16,7 @@ public class GetStartStmp {
 
     private Logger logger = LoggerFactory.getLogger(DealMsg.class);
 
-    public long getStartStmp(String hms){
+    public long getStartStmp(String hms) {
         Calendar now = Calendar.getInstance();//获取当前年月日
         int year = now.get(Calendar.YEAR);
         int month = now.get(Calendar.MONTH) + 1;
@@ -29,7 +29,7 @@ public class GetStartStmp {
             startTime = sdf.parse(startTimeStr);
             return startTime.getTime();
         } catch (ParseException e) {
-            logger.info(e.getMessage());
+            logger.error("got exception", e);
             return -1l;
         }
     }

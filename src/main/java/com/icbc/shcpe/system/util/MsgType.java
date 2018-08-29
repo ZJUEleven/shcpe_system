@@ -5,6 +5,7 @@ public class MsgType {
     private MsgType() {
         throw new IllegalStateException("Utility class");
     }
+
     public static final String CES001 = "CES.001.001";
     public static final String CES002 = "CES.002.001";
     public static final String CES003 = "CES.003.001";

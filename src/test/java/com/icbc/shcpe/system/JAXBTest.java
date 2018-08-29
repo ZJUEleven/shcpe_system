@@ -12,10 +12,11 @@ public class JAXBTest {
 
     /**
      * 将java对象转换成xml，并用注解指定生成规则，是生成属性还是生成节点
+     *
      * @throws Exception
      */
     @Test
-    public void testMarshaller() throws Exception{
+    public void testMarshaller() throws Exception {
         /*
         //获得转换的上下文对象
         JAXBContext context = JAXBContext.newInstance(Employee.class);
@@ -44,10 +45,11 @@ public class JAXBTest {
 
     /**
      * 读取xml文档，并将xml文档反序列化为java对象
+     *
      * @throws Exception
      */
     @Test
-    public void testUnMarshaller() throws Exception{
+    public void testUnMarshaller() throws Exception {
         /*
         JAXBContext context = JAXBContext.newInstance(Employee.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();

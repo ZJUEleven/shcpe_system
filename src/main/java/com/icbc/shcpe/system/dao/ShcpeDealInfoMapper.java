@@ -19,5 +19,5 @@ public interface ShcpeDealInfoMapper {
 
     int updateByPrimaryKey(ShcpeDealInfo record);
 
-    String selectNewestXmlByQuoteIdAndMsgType(String msg,String msgType);
+    String selectNewestXmlByQuoteIdAndMsgType(String msg, String msgType);
 }

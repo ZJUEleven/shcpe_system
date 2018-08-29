@@ -35,8 +35,8 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
 
     private Logger logger = LoggerFactory.getLogger(DealMsg.class);
 
-    public MsgHandleResult tradeInfoReceive(String msgType, String msg){
-        switch (msgType){
+    public MsgHandleResult tradeInfoReceive(String msgType, String msg) {
+        switch (msgType) {
             case MsgType.CES001:
                 //校验报文格式
                 isContinueDeal(msgType, msg);
@@ -54,13 +54,14 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
 
     /**
      * 判断是否继续执行业务代码，如果校验通过，则开线程处理业务；否则不执行
-     * @param msgType   报文类型
-     * @param msg       报文信息（String类型）
-     * @return          返回是否继续执行业务处理结果
+     *
+     * @param msgType 报文类型
+     * @param msg     报文信息（String类型）
+     * @return 返回是否继续执行业务处理结果
      */
     private boolean isContinueDeal(String msgType, String msg) {
-        Boolean isXML = validateXMLByXSD(msgType,msg);//报文格式是否正确
-        if(isXML){
+        Boolean isXML = validateXMLByXSD(msgType, msg);//报文格式是否正确
+        if (isXML) {
             msgHandleResult.setResultCode("1");
             msgHandleResult.setErrorReason(null);
             //报文格式没错就开新线程处理业务
@@ -69,7 +70,7 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
             ExecutorService executorService = Executors.newCachedThreadPool();
             executorService.execute(dealMsg);
             return true;
-        }else {
+        } else {
             msgHandleResult.setResultCode("-1");
             msgHandleResult.setErrorReason(msgType + "报文格式不正确！");
             logger.info("{}报文校验失败！", msgType);
@@ -79,8 +80,9 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
 
     /**
      * 校验接收到的报文是否符合规则
-     * @param msgType   报文类型
-     * @param msg       报文信息（String类型）
+     *
+     * @param msgType 报文类型
+     * @param msg     报文信息（String类型）
      */
     private Boolean validateXMLByXSD(String msgType, String msg) {
         String xmlStr = msg;
@@ -124,7 +126,7 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
             }
         } catch (Exception ex) {
             logger.info("XML文件: " + xmlStr + " 通过XSD文件:" + xsdFileName + "检验失败。/n原因： " + ex.getMessage());
-            logger.info(ex.getMessage());
+            logger.error("got exception", ex);
         }
         return isXML;
     }
