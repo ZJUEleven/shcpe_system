@@ -91,6 +91,8 @@ public class DealMsg implements Runnable{
             ces011MsgClass = Class.forName(MsgClass.CES011CLASS);
         } catch (ClassNotFoundException e) {
             logger.info(e.getMessage());
+
+            logger.error("got exception", e);
         }
         share.msg.ces011.MainBody ces011 = (share.msg.ces011.MainBody) getJavaFromXmlStr(ces011MsgClass,msg);
         //存储CES011报文信息

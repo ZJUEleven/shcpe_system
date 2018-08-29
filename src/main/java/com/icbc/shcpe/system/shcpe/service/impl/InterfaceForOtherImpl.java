@@ -39,13 +39,11 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
         switch (msgType){
             case MsgType.CES001:
                 //校验报文格式
-                Boolean isCes001XML = validateXMLByXSD(msgType,msg);
-                isContinueDeal(msgType, msg, isCes001XML);
+                isContinueDeal(msgType, msg);
                 return msgHandleResult;
             case MsgType.CES011:
                 //校验报文格式
-                Boolean isCes011XML = validateXMLByXSD(msgType,msg);
-                isContinueDeal(msgType, msg, isCes011XML);
+                isContinueDeal(msgType, msg);
                 return msgHandleResult;
             default:
                 msgHandleResult.setResultCode("-1");
@@ -58,10 +56,10 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
      * 判断是否继续执行业务代码，如果校验通过，则开线程处理业务；否则不执行
      * @param msgType   报文类型
      * @param msg       报文信息（String类型）
-     * @param isXML     报文校验是否通过，通过为true
      * @return          返回是否继续执行业务处理结果
      */
-    private boolean isContinueDeal(String msgType, String msg, Boolean isXML) {
+    private boolean isContinueDeal(String msgType, String msg) {
+        Boolean isXML = validateXMLByXSD(msgType,msg);//报文格式是否正确
         if(isXML){
             msgHandleResult.setResultCode("1");
             msgHandleResult.setErrorReason(null);

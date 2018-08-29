@@ -7,7 +7,7 @@ import com.icbc.shcpe.system.shcpe.service.impl.DealMsg;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.icbc.shcpe_system.dao.*;
+import com.icbc.shcpe.system.dao.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import share.middle.service.MsgHandlerForShcpe;
