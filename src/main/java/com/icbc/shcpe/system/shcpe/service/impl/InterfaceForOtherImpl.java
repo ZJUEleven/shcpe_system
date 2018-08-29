@@ -8,6 +8,8 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXValidator;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.util.XMLErrorHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import share.shcpe.service.InterfaceForOther;
 import share.util.MsgHandleResult;
@@ -30,6 +32,9 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
     MsgHandleResult msgHandleResult;
     @Autowired
     DealMsg dealMsg;
+
+    private Logger logger = LoggerFactory.getLogger(DealMsg.class);
+
     public MsgHandleResult tradeInfoReceive(String msgType, String msg){
         switch (msgType){
             case MsgType.CES001:
@@ -69,7 +74,7 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
         }else {
             msgHandleResult.setResultCode("-1");
             msgHandleResult.setErrorReason(msgType + "报文格式不正确！");
-            System.out.println(msgType + "报文校验失败！");
+            logger.info("{}报文校验失败！", msgType);
             return false;
         }
     }
@@ -94,8 +99,6 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
             factory.setNamespaceAware(true);
             //使用当前配置的工厂参数创建 SAXParser 的一个新实例。
             SAXParser parser = factory.newSAXParser();
-            //创建一个读取工具
-//            SAXReader xmlReader = new SAXReader();
             //获取要校验xml文档实例
             Document xmlDocument = DocumentHelper.parseText(xmlStr);
             //设置 XMLReader 的基础实现中的特定属性。核心功能和属性列表可以在 [url]http://sax.sourceforge.net/?selected=get-set[/url] 中找到。
@@ -115,15 +118,15 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
             XMLWriter writer = new XMLWriter(OutputFormat.createPrettyPrint());
             //如果错误信息不为空，说明校验失败，打印错误信息
             if (errorHandler.getErrors().hasContent()) {
-                System.out.println("XML信息通过XSD文件校验失败！");
+                logger.info("XML信息通过XSD文件校验失败！");
                 writer.write(errorHandler.getErrors());
             } else {
-                System.out.println("Good! XML信息通过XSD文件校验成功！");
+                logger.info("Good! XML信息通过XSD文件校验成功！");
                 isXML = true;
             }
         } catch (Exception ex) {
-            System.out.println("XML文件: " + xmlStr + " 通过XSD文件:" + xsdFileName + "检验失败。/n原因： " + ex.getMessage());
-            ex.printStackTrace();
+            logger.info("XML文件: " + xmlStr + " 通过XSD文件:" + xsdFileName + "检验失败。/n原因： " + ex.getMessage());
+            logger.info(ex.getMessage());
         }
         return isXML;
     }

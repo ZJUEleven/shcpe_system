@@ -14,36 +14,50 @@ public class SnowFlakeForMsgID {
 
     private static final long TIME_SPACE = 24*60*60*1000l;//24小时时间间隔的时间戳
 
-    public void setSTART_STMP(long START_STMP) {
-        this.START_STMP = START_STMP;
-    }
-
     /**
      * 起始的时间戳
      */
 
-    private  long START_STMP = new GetStartStmp().getStartStmp("00:00:00");//以当天日期零点作为开始时间戳
+    private long startStmp = new GetStartStmp().getStartStmp("00:00:00");//以当天日期零点作为开始时间戳
+
+    public void setStartStmp(long startStmp) {
+        this.startStmp = startStmp;
+    }
+
+    public long getStartStmp(){
+        return this.startStmp;
+    }
 
     /**
      * 每一部分占用的位数
      */
-    private final static long SEQUENCE_BIT = 3; //序列号占用的位数
-    private final static long MACHINE_BIT = 2;   //机器标识占用的位数
-    private final static long DATACENTER_BIT = 2;//数据中心占用的位数
+    private static final long SEQUENCE_BIT = 3; //序列号占用的位数
+    private static final long MACHINE_BIT = 2;   //机器标识占用的位数
+    private static final long DATACENTER_BIT = 2;//数据中心占用的位数
+
+    public long getSequenceBit() {
+        return SEQUENCE_BIT;
+    }
+    public long getMachineBit(){
+        return MACHINE_BIT;
+    }
+    public long getDatacenterBit(){
+        return DATACENTER_BIT;
+    }
 
     /**
      * 每一部分的最大值
      */
-    private final static long MAX_DATACENTER_NUM = -1L ^ (-1L << DATACENTER_BIT);
-    private final static long MAX_MACHINE_NUM = -1L ^ (-1L << MACHINE_BIT);
-    private final static long MAX_SEQUENCE = -1L ^ (-1L << SEQUENCE_BIT);
+    private final long maxDatacenterNum = -1L ^ (-1L << getDatacenterBit());
+    private final long maxMachineNum = -1L ^ (-1L << getMachineBit());
+    private final long maxSequence = -1L ^ (-1L << getSequenceBit());
 
     /**
      * 每一部分向左的位移
      */
-    private final static long MACHINE_LEFT = SEQUENCE_BIT;
-    private final static long DATACENTER_LEFT = SEQUENCE_BIT + MACHINE_BIT;
-    private final static long TIMESTMP_LEFT = DATACENTER_LEFT + DATACENTER_BIT;
+    private final long machineLeft = getMachineBit();
+    private final long datacenterLeft = getSequenceBit() + getMachineBit();
+    private final long timestmpLeft = datacenterLeft + getDatacenterBit();
 
     @Value("${data_center_id}")
     private long datacenterId;  //数据中心
@@ -53,11 +67,11 @@ public class SnowFlakeForMsgID {
     private long lastStmp = -1L;//上一次时间戳
 
     public SnowFlakeForMsgID() {
-        if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
-            throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
+        if (datacenterId > maxDatacenterNum || datacenterId < 0) {
+            throw new IllegalArgumentException("datacenterId can't be greater than maxDatacenterNum or less than 0");
         }
-        if (machineId > MAX_MACHINE_NUM || machineId < 0) {
-            throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
+        if (machineId > maxMachineNum || machineId < 0) {
+            throw new IllegalArgumentException("machineId can't be greater than maxMachineNum or less than 0");
         }
     }
 
@@ -70,17 +84,17 @@ public class SnowFlakeForMsgID {
         long currStmp = getNewstmp();
         //判断当前时间与开始时间间隔是否达到24小时，若达到指定间隔，重置开始时间
         GetStartStmp getStaStmp = new GetStartStmp();
-        if((currStmp - START_STMP) >= TIME_SPACE){
-            setSTART_STMP(getStaStmp.getStartStmp("00:00:00"));
+        if((currStmp -  getStartStmp()) >= TIME_SPACE){
+            setStartStmp(getStaStmp.getStartStmp("00:00:00"));
         }
 
         if (currStmp < lastStmp) {
-            throw new RuntimeException("Clock moved backwards.  Refusing to generate id");
+            throw new IllegalArgumentException("Clock moved backwards.  Refusing to generate id");
         }
 
         if (currStmp == lastStmp) {
             //相同毫秒内，序列号自增
-            sequence = (sequence + 1) & MAX_SEQUENCE;
+            sequence = (sequence + 1) & maxSequence;
             //同一毫秒的序列数已经达到最大
             if (sequence == 0L) {
                 currStmp = getNextMill();
@@ -92,9 +106,9 @@ public class SnowFlakeForMsgID {
 
         lastStmp = currStmp;
 
-        return (currStmp - START_STMP) << TIMESTMP_LEFT //时间戳部分
-                | datacenterId << DATACENTER_LEFT       //数据中心部分
-                | machineId << MACHINE_LEFT             //机器标识部分
+        return (currStmp -  getStartStmp()) << timestmpLeft //时间戳部分
+                | datacenterId << datacenterLeft       //数据中心部分
+                | machineId << machineLeft             //机器标识部分
                 | sequence;                             //序列号部分
     }
 
@@ -106,16 +120,7 @@ public class SnowFlakeForMsgID {
         return mill;
     }
 
-    private long getNewstmp() {
+    public long getNewstmp() {
         return System.currentTimeMillis();
     }
-
-//    public static void main(String[] args) {
-//        SnowFlake snowFlake = new SnowFlake(0, 0);
-//
-//        for (int i = 0; i < (1 << 10); i++) {
-//            System.out.println(snowFlake.nextId());
-//        }
-//
-//    }
 }
