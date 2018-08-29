@@ -81,6 +81,9 @@ public class DealMsg implements Runnable{
         }
     }
 
+    /**
+     * 处理ces011报文
+     */
     private void dealCes011() {
         //将报文转换为对应对象
         Class ces011MsgClass = null;
@@ -135,6 +138,9 @@ public class DealMsg implements Runnable{
         }
     }
 
+    /**
+     * 处理ces001报文
+     */
     private void dealCes001() {
         //解析报文
         //将报文转换为对应对象
