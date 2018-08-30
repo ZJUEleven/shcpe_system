@@ -38,9 +38,6 @@ public class InterfaceForOtherImpl implements InterfaceForOther {
     public MsgHandleResult tradeInfoReceive(String msgType, String msg) {
         switch (msgType) {
             case MsgType.CES001:
-                //校验报文格式
-                isContinueDeal(msgType, msg);
-                return msgHandleResult;
             case MsgType.CES011:
                 //校验报文格式
                 isContinueDeal(msgType, msg);

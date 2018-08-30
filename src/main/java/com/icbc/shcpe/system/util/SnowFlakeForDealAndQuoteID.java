@@ -11,10 +11,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class SnowFlakeForDealAndQuoteID extends SnowFlakeForMsgID {
 
-    private long staStmp = getSecondTimestamp(new GetStartStmp().getStartStmp("00:00:00"));//以当天日期零点作为开始时间戳
+    //指定初始时间
+    private static final String START_STMP_STR = "08:55:00";
 
+    @Override
+    public String getStartStmpStr() {
+        return START_STMP_STR;
+    }
+
+    private long staStmp = getSecondTimestamp(new GetStartStmp().getStartStmp(getStartStmpStr()));//以指定初始时间作为开始时间戳
+
+    @Override
     public long getStartStmp() {
-        return this.staStmp;
+        return staStmp;
     }
 
     /**
@@ -24,18 +33,22 @@ public class SnowFlakeForDealAndQuoteID extends SnowFlakeForMsgID {
     private static final long MACHINE_BIT = 1;   //机器标识占用的位数
     private static final long DATACENTER_BIT = 1;//数据中心占用的位数
 
+    @Override
     public long getSequenceBit() {
         return SEQUENCE_BIT;
     }
 
+    @Override
     public long getMachineBit() {
         return MACHINE_BIT;
     }
 
+    @Override
     public long getDatacenterBit() {
         return DATACENTER_BIT;
     }
 
+    @Override
     public long getNewstmp() {
         return getSecondTimestamp(System.currentTimeMillis());
     }

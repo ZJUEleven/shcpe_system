@@ -38,6 +38,7 @@ public class DealMsg implements Runnable {
     private static final String BRANCHID = "000000000";//机构代码（9位）
     private static final String QUTOTYPE = "DT";//第一位为报价方式代码，第二位为品种代码
     private static final String DEALTYPE = "TD";//前2位为品种代码
+    private static final String GOT_EXCEPTION = "got exception";
 
     private String msgType;
     private String msg;
@@ -90,7 +91,7 @@ public class DealMsg implements Runnable {
         try {
             ces011MsgClass = Class.forName(MsgClass.CES011CLASS);
         } catch (ClassNotFoundException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         share.msg.ces011.MainBody ces011 = (share.msg.ces011.MainBody) getJavaFromXmlStr(ces011MsgClass, msg);
         //存储CES011报文信息
@@ -107,7 +108,7 @@ public class DealMsg implements Runnable {
             } catch (Exception e) {
                 //若出现异常，将报文状态置为“发送失败”
                 updateMsgStatus(ces003IdInMysql);
-                logger.error("got exception", e);
+                logger.error(GOT_EXCEPTION, e);
             }
         }
         if (ces011.getRecInf().getRecCmd().equals("1")) {//应答标识为1：终止
@@ -122,7 +123,7 @@ public class DealMsg implements Runnable {
             } catch (Exception e) {
                 //若出现异常，将报文状态置为“发送失败”
                 updateMsgStatus(ces012IdInMysql);
-                logger.error("got exception", e);
+                logger.error(GOT_EXCEPTION, e);
             }
             //模拟并发，向中间件再发一条ces012报文
             //存储ces012报文
@@ -133,7 +134,7 @@ public class DealMsg implements Runnable {
             } catch (Exception e) {
                 //若出现异常，将报文状态置为“发送失败”
                 updateMsgStatus(ces012IdInMysql2);
-                logger.error("got exception", e);
+                logger.error(GOT_EXCEPTION, e);
             }
         }
     }
@@ -148,7 +149,7 @@ public class DealMsg implements Runnable {
         try {
             ces001MsgClass = Class.forName(MsgClass.CES001CLASS);
         } catch (ClassNotFoundException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         share.msg.ces001.MainBody ces001 = (share.msg.ces001.MainBody) getJavaFromXmlStr(ces001MsgClass, msg);
         //存储CES001报文信息
@@ -164,7 +165,7 @@ public class DealMsg implements Runnable {
         } catch (Exception e) {
             //若出现异常，将报文状态置为“发送失败”
             updateMsgStatus(ces010IdInMysql);
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
 
         //组装“转贴现对话报价转发报文”ces002
@@ -178,7 +179,7 @@ public class DealMsg implements Runnable {
         } catch (Exception e) {
             //若出现异常，将报文状态置为“发送失败”
             updateMsgStatus(ces002IdInMysql);
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
     }
 
@@ -194,7 +195,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeDealInfoMapper.updateByPrimaryKeySelective(shcpeDealInfo);
         } catch (PersistenceException pe) {
-            logger.error("got exception", pe);
+            logger.error(GOT_EXCEPTION, pe);
         }
     }
 
@@ -212,7 +213,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces002.getMsgId().getId());
@@ -225,7 +226,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         return shcpeDealInfo.getId();
     }
@@ -248,7 +249,7 @@ public class DealMsg implements Runnable {
         try {
             xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ces002.getMsgId().setCreDtTm(xgcal);//报文时间
         /*------------设置原报文标识------------*/
@@ -350,7 +351,7 @@ public class DealMsg implements Runnable {
             try {
                 iSODate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date);//生成样式为“yyyy-mm-dd”的XMLGregorianCalendar类
             } catch (DatatypeConfigurationException e) {
-                logger.error("got exception", e);
+                logger.error(GOT_EXCEPTION, e);
             }
             ces002Bill.setDsctDt(iSODate);
             //出票日期
@@ -401,7 +402,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces003.getMsgId().getId());
@@ -416,7 +417,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         return shcpeDealInfo.getId();
     }
@@ -453,7 +454,7 @@ public class DealMsg implements Runnable {
         try {
             xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ces003.getMsgId().setCreDtTm(xgcal);//报文时间
         /*------------------------------设置成交信息--------------------------------*/
@@ -469,7 +470,7 @@ public class DealMsg implements Runnable {
         try {
             iSODate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date);//生成样式为“yyyy-mm-dd”的XMLGregorianCalendar类
         } catch (DatatypeConfigurationException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ces003.getDealInf().setTrdDate(iSODate);
         //成交时间
@@ -491,7 +492,7 @@ public class DealMsg implements Runnable {
         try {
             ces001MsgClass = Class.forName(MsgClass.CES001CLASS);
         } catch (ClassNotFoundException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         share.msg.ces001.MainBody ces001 = (share.msg.ces001.MainBody) getJavaFromXmlStr(ces001MsgClass, ces001Xml);
         //本方机构代码
@@ -580,7 +581,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces012.getMsgId().getId());
@@ -593,7 +594,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         return shcpeDealInfo.getId();
     }
@@ -616,7 +617,7 @@ public class DealMsg implements Runnable {
         try {
             xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ces012.getMsgId().setCreDtTm(xgcal);//报文时间
         //设置报价单信息（报价单编号+业务类型）
@@ -647,7 +648,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces011.getMsgId().getId());
@@ -659,7 +660,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         return shcpeDealInfo.getId();
     }
@@ -678,7 +679,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces010.getMsgId().getId());
@@ -690,7 +691,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         return shcpeDealInfo.getId();
     }
@@ -713,7 +714,7 @@ public class DealMsg implements Runnable {
         try {
             xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         } catch (DatatypeConfigurationException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ces010.getMsgId().setCreDtTm(xgcal);//报文时间
         //设置原报文标识
@@ -753,7 +754,7 @@ public class DealMsg implements Runnable {
             return stringWriter.toString();
 
         } catch (Exception e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
             return "-1";
         }
     }
@@ -766,7 +767,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeXmlDetailInfoMapper.insertSelective(shcpeXmlDetailInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         ShcpeDealInfo shcpeDealInfo = new ShcpeDealInfo();
         shcpeDealInfo.setMsgId(ces001.getMsgId().getId());
@@ -784,7 +785,7 @@ public class DealMsg implements Runnable {
         try {
             shcpeDealInfoMapper.insertSelective(shcpeDealInfo);
         } catch (PersistenceException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         return shcpeDealInfo.getId();
     }
@@ -819,7 +820,7 @@ public class DealMsg implements Runnable {
             StringReader sr = new StringReader(msg);
             xmlObject = ((JAXBElement) unmarshaller.unmarshal(sr)).getValue();
         } catch (JAXBException e) {
-            logger.error("got exception", e);
+            logger.error(GOT_EXCEPTION, e);
         }
         return xmlObject;
 

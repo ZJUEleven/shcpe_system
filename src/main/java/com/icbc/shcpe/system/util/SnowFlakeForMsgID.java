@@ -17,15 +17,21 @@ public class SnowFlakeForMsgID {
     /**
      * 起始的时间戳
      */
+    //指定初始时间
+    private static final String START_STMP_STR = "00:00:00";
 
-    private long startStmp = new GetStartStmp().getStartStmp("00:00:00");//以当天日期零点作为开始时间戳
+    public String getStartStmpStr() {
+        return START_STMP_STR;
+    }
+
+    private long startStmp = new GetStartStmp().getStartStmp(getStartStmpStr());//以当天日期零点作为开始时间戳
 
     public void setStartStmp(long startStmp) {
         this.startStmp = startStmp;
     }
 
     public long getStartStmp() {
-        return this.startStmp;
+        return startStmp;
     }
 
     /**
@@ -87,7 +93,7 @@ public class SnowFlakeForMsgID {
         //判断当前时间与开始时间间隔是否达到24小时，若达到指定间隔，重置开始时间
         GetStartStmp getStaStmp = new GetStartStmp();
         if ((currStmp - getStartStmp()) >= TIME_SPACE) {
-            setStartStmp(getStaStmp.getStartStmp("00:00:00"));
+            setStartStmp(getStaStmp.getStartStmp(getStartStmpStr()));
         }
 
         if (currStmp < lastStmp) {

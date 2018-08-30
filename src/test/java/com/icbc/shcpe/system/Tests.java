@@ -4,6 +4,8 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.icbc.shcpe.system.dao.ShcpeDealInfoMapper;
 import com.icbc.shcpe.system.dao.ShcpeXmlDetailInfoMapper;
 import com.icbc.shcpe.system.shcpe.service.impl.DealMsg;
+import com.icbc.shcpe.system.util.SnowFlakeForDealAndQuoteID;
+import com.icbc.shcpe.system.util.SnowFlakeForMsgID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,10 @@ public class Tests {
     private InterfaceForOther interfaceForOther;
     @Autowired
     private MsgHandleResult msgHandleResult;
+    @Autowired
+    private SnowFlakeForMsgID snowFlakeForMsgID;
+    @Autowired
+    private SnowFlakeForDealAndQuoteID snowFlakeForDealAndQuoteID;
 
     @Reference(version = "${demo.shcpe_service.version}",
             application = "${dubbo.application.id}",
@@ -56,5 +62,8 @@ public class Tests {
         System.out.println(xml);*/
 /*        msgHandleResult = interfaceForOther.tradeInfoReceive("CES.001.001","this is 001 message!");
         System.out.println(msgHandleResult.getResultCode());*/
+        for (int i = 0; i < 20; i++) {
+            System.out.println("输出在这儿。。。。。。。。。。。。。啊啊啊啊。。。。" + snowFlakeForDealAndQuoteID.nextId());
+        }
     }
 }
